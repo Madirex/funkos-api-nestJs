@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsUUID,
   IsDate,
+  Min,
 } from 'class-validator'
 
 export class ResponseFunkoDto {
@@ -12,25 +13,27 @@ export class ResponseFunkoDto {
   @IsUUID()
   id: string
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
+  @IsString({ message: 'El nombre debe de ser un String' })
   name: string
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: 'El precio no puede estar vacío' })
+  @IsNumber({}, { message: 'El precio debe de ser un número' })
+  @Min(0, { message: 'La cantidad debe de ser mayor o igual a 0' })
   price: number
 
-  @IsNotEmpty()
-  @IsInt()
+  @IsNotEmpty({ message: 'La cantidad no puede estar vacía' })
+  @IsInt({ message: 'La cantidad debe de ser un número entero' })
+  @Min(0, { message: 'La cantidad debe de ser mayor o igual a 0' })
   quantity: number
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'La imagen no puede estar vacía' })
+  @IsString({ message: 'La imagen debe de ser un String' })
   image: string
 
-  @IsDate()
+  @IsDate({ message: 'La fecha de creación debe de ser una fecha' })
   createdAt: Date
 
-  @IsDate()
+  @IsDate({ message: 'La fecha de actualización debe de ser una fecha' })
   updatedAt: Date
 }
