@@ -8,6 +8,7 @@ import {
 import { CreateFunkoDto } from './dto/create-funko.dto'
 import { UpdateFunkoDto } from './dto/update-funko.dto'
 import { FunkoMapper } from './mappers/funko.mapper'
+import { Funko } from './entities/funko.entity'
 
 @Injectable()
 export class FunkosService {
@@ -16,12 +17,12 @@ export class FunkosService {
 
   constructor(private readonly funkoMapper: FunkoMapper) {}
 
-  findAll() {
+  async findAll() {
     this.logger.log('Obteniendo todos los Funkos')
     return this.funkos
   }
 
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
     const funko = this.funkos.find((funko) => funko.id === id)
     this.logger.log(`Obteniendo Funko por id: ${id}`)
     if (!funko) {
@@ -30,7 +31,7 @@ export class FunkosService {
     return funko
   }
 
-  create(createFunkoDto: CreateFunkoDto) {
+  async create(createFunkoDto: CreateFunkoDto): Promise<CreateFunkoDto> {
     this.logger.log(
       `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
     )
@@ -39,10 +40,10 @@ export class FunkosService {
     return funko
   }
 
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     updateFunkoDto: UpdateFunkoDto,
-  ) {
+  ): Promise<UpdateFunkoDto> {
     this.logger.log(
       `Actualizando Funko con datos: ${JSON.stringify(updateFunkoDto)}`,
     )
@@ -58,7 +59,7 @@ export class FunkosService {
     return this.funkos[index]
   }
 
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
     this.logger.log(`Eliminando Funko con id: ${id}`)
     const index = this.funkos.findIndex((funko) => funko.id === id)
     if (index === -1) {

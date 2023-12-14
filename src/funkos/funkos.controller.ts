@@ -19,37 +19,42 @@ export class FunkosController {
 
   @Get()
   @HttpCode(200)
-  findAll() {
+  async findAll() {
     this.logger.log('Obteniendo todos los Funkos')
-    return this.funkosService.findAll()
+    return await this.funkosService.findAll()
   }
 
   @Get(':id')
   @HttpCode(200)
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     this.logger.log(`Obteniendo Funko por id: ${id}`)
-    return this.funkosService.findOne(id)
+    return await this.funkosService.findOne(id)
   }
   @Post()
   @HttpCode(201)
-  create(@Body() createFunkoDto: CreateFunkoDto) {
-    this.logger.log(`Creando Funko con datos: ${createFunkoDto}`)
-    return this.funkosService.create(createFunkoDto)
+  async create(@Body() createFunkoDto: CreateFunkoDto) {
+    this.logger.log(
+      `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
+    )
+    return await this.funkosService.create(createFunkoDto)
   }
 
   @Put(':id')
   @HttpCode(200)
-  update(@Param('id') id: string, @Body() updateFunkoDto: UpdateFunkoDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateFunkoDto: UpdateFunkoDto,
+  ) {
     this.logger.log(
       `Actualizando Funko con datos: ${JSON.stringify(updateFunkoDto)}`,
     )
-    return this.funkosService.update(id, updateFunkoDto)
+    return await this.funkosService.update(id, updateFunkoDto)
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     this.logger.log(`Eliminando Funko con id: ${id}`)
-    return this.funkosService.remove(id)
+    return await this.funkosService.remove(id)
   }
 }
