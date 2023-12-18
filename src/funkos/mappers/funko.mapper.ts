@@ -10,11 +10,11 @@ export class FunkoMapper {
     funko.id = uuidv4()
     funko.createdAt = new Date()
     funko.updatedAt = new Date()
-    funko.name = dto.name
+    funko.name = dto.name.trim()
     funko.price = dto.price
     funko.quantity = dto.quantity
-    funko.image = dto.image
-    funko.category = dto.category //TODO: reemplazar por Category
+    funko.image = dto.image.trim()
+    funko.category = dto.category.trim() //TODO: reemplazar por Category
     return funko
   }
 
@@ -23,11 +23,11 @@ export class FunkoMapper {
     funko.id = entity.id
     funko.createdAt = entity.createdAt
     funko.updatedAt = new Date()
-    funko.name = dto.name
+    funko.name = dto.name.trim()
     funko.price = dto.price
     funko.quantity = dto.quantity
-    funko.image = dto.image
-    funko.category = dto.category //TODO: reemplazar por Category
+    funko.image = dto.image.trim()
+    funko.category = dto.category.trim() //TODO: reemplazar por Category
     return funko
   }
 }
