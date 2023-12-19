@@ -8,6 +8,7 @@ import {
   Max,
   MaxLength,
 } from 'class-validator'
+import { Transform, TransformFnParams } from 'class-transformer'
 
 export class CreateFunkoDto {
   @IsNotEmpty({ message: 'El nombre no puede estar vacío' })

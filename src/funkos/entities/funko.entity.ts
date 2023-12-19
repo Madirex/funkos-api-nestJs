@@ -7,4 +7,5 @@ export class Funko {
   category: string //TODO: cambiar a clase Category
   createdAt: Date
   updatedAt: Date
+  isActive: boolean
 }

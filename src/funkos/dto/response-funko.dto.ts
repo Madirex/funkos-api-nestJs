@@ -49,4 +49,7 @@ export class ResponseFunkoDto {
 
   @IsDate({ message: 'La fecha de actualización debe de ser una fecha' })
   updatedAt: Date
+
+  @IsNotEmpty({ message: 'El estado no puede estar vacío' })
+  isActive: boolean
 }

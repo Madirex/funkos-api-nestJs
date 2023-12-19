@@ -10,24 +10,26 @@ export class FunkoMapper {
     funko.id = uuidv4()
     funko.createdAt = new Date()
     funko.updatedAt = new Date()
-    funko.name = dto.name.trim()
-    funko.price = dto.price
-    funko.quantity = dto.quantity
-    funko.image = dto.image.trim()
-    funko.category = dto.category.trim() //TODO: reemplazar por Category
+    funko.name = dto.name ? dto.name.trim() : ''
+    funko.price = dto.price || 0
+    funko.quantity = dto.quantity || 0
+    funko.image = dto.image ? dto.image.trim() : ''
+    funko.category = dto.category ? dto.category.trim() : 'defaultCategory' //TODO: reemplazar por Category
+    funko.isActive = true
     return funko
   }
 
   mapUpdateToEntity(dto: UpdateFunkoDto, entity: Funko): Funko {
     const funko = new Funko()
     funko.id = entity.id
-    funko.createdAt = entity.createdAt
+    funko.createdAt = entity.createdAt || new Date()
     funko.updatedAt = new Date()
-    funko.name = dto.name.trim()
-    funko.price = dto.price
-    funko.quantity = dto.quantity
-    funko.image = dto.image.trim()
-    funko.category = dto.category.trim() //TODO: reemplazar por Category
+    funko.name = dto.name ? dto.name.trim() : entity.name
+    funko.price = dto.price || entity.price
+    funko.quantity = dto.quantity || entity.quantity
+    funko.image = dto.image ? dto.image.trim() : entity.image
+    funko.category = dto.category ? dto.category.trim() : entity.category //TODO: reemplazar por Category
+    funko.isActive = entity.isActive
     return funko
   }
 }
