@@ -23,8 +23,8 @@ export class FunkosService {
   }
 
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
-    const funko = this.funkos.find((funko) => funko.id === id)
     this.logger.log(`Obteniendo Funko por id: ${id}`)
+    const funko = this.funkos.find((funko) => funko.id === id)
     if (!funko) {
       throw new NotFoundException(`Funko con ID: ${id} no encontrado`)
     }

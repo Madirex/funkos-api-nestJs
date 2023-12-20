@@ -46,7 +46,7 @@ export class FunkosController {
     @Body() updateFunkoDto: UpdateFunkoDto,
   ) {
     this.logger.log(
-      `Actualizando Funko con datos: ${JSON.stringify(updateFunkoDto)}`,
+      `Actualizando Funko ${id} con datos: ${JSON.stringify(updateFunkoDto)}`,
     )
     return await this.funkosService.update(id, updateFunkoDto)
   }
