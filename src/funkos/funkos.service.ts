@@ -10,18 +10,34 @@ import { UpdateFunkoDto } from './dto/update-funko.dto'
 import { FunkoMapper } from './mappers/funko.mapper'
 import { Funko } from './entities/funko.entity'
 
+/**
+ * Servicio de Funkos
+ */
 @Injectable()
 export class FunkosService {
   private funkos = []
   private readonly logger = new Logger(FunkosService.name)
 
+  /**
+   * Constructor
+   * @param funkoMapper Mapper de Funkos
+   */
   constructor(private readonly funkoMapper: FunkoMapper) {}
 
+  /**
+   * Obtiene todos los Funkos
+   * @returns Arreglo con todos los Funkos
+   */
   async findAll() {
     this.logger.log('Obteniendo todos los Funkos')
     return this.funkos
   }
 
+  /**
+   * Obtiene un Funko dado el ID
+   * @param id Identificador del Funko
+   * @returns Funko encontrado
+   */
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
     this.logger.log(`Obteniendo Funko por id: ${id}`)
     const funko = this.funkos.find((funko) => funko.id === id)
@@ -31,6 +47,11 @@ export class FunkosService {
     return funko
   }
 
+  /**
+   * Crea un Funko
+   * @param createFunkoDto DTO de creación de Funko
+   * @returns Funko creado
+   */
   async create(createFunkoDto: CreateFunkoDto): Promise<CreateFunkoDto> {
     this.logger.log(
       `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
@@ -40,6 +61,12 @@ export class FunkosService {
     return funko
   }
 
+  /**
+   * Actualiza un Funko
+   * @param id Identificador del Funko
+   * @param updateFunkoDto DTO de actualización de Funko
+   * @returns Funko actualizado
+   */
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     updateFunkoDto: UpdateFunkoDto,
@@ -51,14 +78,18 @@ export class FunkosService {
     if (index === -1) {
       throw new NotFoundException(`Funko con ID: ${id} no encontrado`)
     }
-    const funko = this.funkoMapper.mapUpdateToEntity(
+    this.funkos[index] = this.funkoMapper.mapUpdateToEntity(
       updateFunkoDto,
       this.funkos[index],
     )
-    this.funkos[index] = funko
     return this.funkos[index]
   }
 
+  /**
+   * Elimina un Funko
+   * @param id Identificador del Funko
+   * @returns Funko eliminado
+   */
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
     this.logger.log(`Eliminando Funko con id: ${id}`)
     const index = this.funkos.findIndex((funko) => funko.id === id)

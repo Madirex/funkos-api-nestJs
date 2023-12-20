@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common'
 import { FunkosModule } from './funkos/funkos.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { CategoriesModule } from './categories/categories.module';
+import { CategoriesModule } from './categories/categories.module'
 
+/**
+ * Módulo principal de la aplicación
+ */
 @Module({
   imports: [
     FunkosModule,
@@ -21,4 +24,8 @@ import { CategoriesModule } from './categories/categories.module';
   controllers: [],
   providers: [],
 })
+
+/**
+ * Módulo principal de la aplicación
+ */
 export class AppModule {}

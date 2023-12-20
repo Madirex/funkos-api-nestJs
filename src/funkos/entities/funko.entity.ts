@@ -1,3 +1,6 @@
+/**
+ * Entity Funko
+ */
 export class Funko {
   id: string
   name: string

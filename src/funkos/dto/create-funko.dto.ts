@@ -1,15 +1,16 @@
 import {
   IsInt,
-  IsString,
   IsNotEmpty,
   IsNumber,
-  Min,
   IsOptional,
+  IsString,
   Max,
-  MaxLength,
+  Min,
 } from 'class-validator'
-import { Transform, TransformFnParams } from 'class-transformer'
 
+/**
+ * Clase DTO (Data Transfer Object) para la creación de Funkos
+ */
 export class CreateFunkoDto {
   @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
   @IsString({ message: 'El nombre debe de ser un String' })

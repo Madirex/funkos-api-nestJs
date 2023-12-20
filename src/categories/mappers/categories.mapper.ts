@@ -9,8 +9,9 @@ import { UpdateCategoryDto } from '../dto/update-category.dto'
 @Injectable()
 export class CategoriesMapper {
   /**
-   * Método que se encarga de mapear un DTO de creación de categoría a una entidad
+   * Mapea un DTO de creación de categoría a una entidad
    * @param dto DTO de creación de categoría
+   * @returns Entidad de categoría
    */
   mapCreateToEntity(dto: CreateCategoryDto): Category {
     const category = new Category()
@@ -25,9 +26,10 @@ export class CategoriesMapper {
   }
 
   /**
-   * Método que se encarga de mapear un DTO de actualización de categoría a una entidad
+   * Mapea un DTO de actualización de categoría a una entidad
    * @param dto DTO de actualización de categoría
    * @param entity Entidad de categoría
+   * @returns Entidad de categoría
    */
   mapUpdateToEntity(dto: UpdateCategoryDto, entity: Category): Category {
     const category = new Category()

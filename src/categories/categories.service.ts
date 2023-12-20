@@ -19,7 +19,7 @@ export class CategoriesService {
   private readonly logger = new Logger(CategoriesService.name)
 
   /**
-   * Método constructor
+   * Constructor
    * @param categoriesRepository Repositorio de categorías
    * @param categoriesMapper Mapper de categorías
    */
@@ -30,7 +30,7 @@ export class CategoriesService {
   ) {}
 
   /**
-   * Método que se encarga de obtener todas las categorías
+   * Obtener todas las categorías
    * @returns Arreglo con todas las categorías
    */
   async findAll() {
@@ -39,7 +39,7 @@ export class CategoriesService {
   }
 
   /**
-   * Método que se encarga de obtener una categoría dado el ID
+   * Obtener una categoría dado el ID
    * @param id Identificador de la categoría
    * @returns Categoría encontrada
    */
@@ -56,7 +56,7 @@ export class CategoriesService {
   }
 
   /**
-   * Método que se encarga de crear una categoría
+   * Crear una categoría
    * @param createCategoryDto DTO de creación de categoría
    * @returns Categoría creada
    */
@@ -84,7 +84,7 @@ export class CategoriesService {
   }
 
   /**
-   * Método que se encarga de actualizar una categoría
+   * Actualizar una categoría
    * @param id Identificador de la categoría
    * @param updateCategoryDto DTO de actualización de categoría
    * @returns Categoría actualizada
@@ -129,7 +129,7 @@ export class CategoriesService {
   }
 
   /**
-   * Método que se encarga de eliminar una categoría
+   * Eliminar una categoría
    * @param id Identificador de la categoría
    * @returns Categoría eliminada
    */
@@ -146,9 +146,9 @@ export class CategoriesService {
   }
 
   /**
-   * Método que se encarga de verificar si existe una categoría con el nombre
+   * Verificar si existe una categoría con el nombre
    * @param name Nombre de la categoría
-   * @private Método privado
+   * @private Función privada
    * @returns Categoría encontrada
    */
   private async existsName(name: string) {

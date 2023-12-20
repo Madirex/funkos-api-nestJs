@@ -21,15 +21,15 @@ export class CategoriesController {
   private readonly logger = new Logger(CategoriesController.name)
 
   /**
-   * Método constructor
+   * Constructor
    * @param categoriesService Servicio de categorías
    */
   constructor(private readonly categoriesService: CategoriesService) {}
 
   /**
-   * Método que se encarga de obtener todas las categorías
+   * Obtiene todas las categorías
    * @returns Arreglo con todas las categorías
-   * @example http://localhost:3000/categories
+   * @example http://localhost:3000/v1/categories
    */
   @Get()
   @HttpCode(200)
@@ -39,10 +39,10 @@ export class CategoriesController {
   }
 
   /**
-   * Método que se encarga de obtener una categoría dado el ID
+   * Obtiene una categoría dado su ID
    * @param id Identificador de la categoría
    * @returns Categoría encontrada
-   * @example http://localhost:3000/categories/1
+   * @example http://localhost:3000/v1/categories/1
    */
   @Get(':id')
   @HttpCode(200)
@@ -52,10 +52,10 @@ export class CategoriesController {
   }
 
   /**
-   * Método que se encarga de crear una categoría
+   * Crear una categoría
    * @param createCategoryDto DTO de creación de categoría
    * @returns Categoría creada
-   * @example http://localhost:3000/categories
+   * @example http://localhost:3000/v1/categories
    */
   @Post()
   @HttpCode(201)
@@ -67,11 +67,11 @@ export class CategoriesController {
   }
 
   /**
-   * Método que se encarga de actualizar una categoría
+   * Actualizar una categoría
    * @param id Identificador de la categoría
    * @param updateCategoryDto DTO de actualización de categoría
    * @returns Categoría actualizada
-   * @example http://localhost:3000/categories/1
+   * @example http://localhost:3000/v1/categories/1
    */
   @Put(':id')
   @HttpCode(200)
@@ -88,10 +88,10 @@ export class CategoriesController {
   }
 
   /**
-   * Método que se encarga de eliminar una categoría
+   * Eliminar una categoría
    * @param id Identificador de la categoría
    * @returns Categoría eliminada
-   * @example http://localhost:3000/categories/1
+   * @example http://localhost:3000/v1/categories/1
    */
   @Delete(':id')
   @HttpCode(204)

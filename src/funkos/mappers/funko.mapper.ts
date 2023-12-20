@@ -3,8 +3,17 @@ import { Funko } from '../entities/funko.entity'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { v4 as uuidv4 } from 'uuid'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
+
+/**
+ * Mapper de Funkos
+ */
 @Injectable()
 export class FunkoMapper {
+  /**
+   * Mapea un Funko a un DTO
+   * @param dto DTO de Funko
+   * @returns Entidad de Funko
+   */
   mapCreateToEntity(dto: CreateFunkoDto): Funko {
     const funko = new Funko()
     funko.id = uuidv4()
@@ -19,6 +28,11 @@ export class FunkoMapper {
     return funko
   }
 
+  /**
+   * Mapea un DTO de actualización de Funko a una entidad de Funko
+   * @param dto DTO de actualización de Funko
+   * @param entity Entidad de Funko
+   */
   mapUpdateToEntity(dto: UpdateFunkoDto, entity: Funko): Funko {
     const funko = new Funko()
     funko.id = entity.id
