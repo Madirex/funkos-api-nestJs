@@ -6,6 +6,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 
+/**
+ * @description Enumeración de los tipos de categorías
+ */
 export enum CategoryType {
   SERIES = 'SERIES',
   DISNEY = 'DISNEY',
@@ -14,6 +17,9 @@ export enum CategoryType {
   OTHER = 'OTHER',
 }
 
+/**
+ * @description Entidad de la categoría
+ */
 @Entity('categories')
 export class Category {
   @PrimaryGeneratedColumn()

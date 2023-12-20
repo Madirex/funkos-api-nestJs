@@ -3,22 +3,34 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   HttpCode,
   Logger,
-  Put,
 } from '@nestjs/common'
 import { CategoriesService } from './categories.service'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 
+/**
+ * Controlador de categorías
+ */
 @Controller('categories')
 export class CategoriesController {
   private readonly logger = new Logger(CategoriesController.name)
+
+  /**
+   * Método constructor
+   * @param categoriesService Servicio de categorías
+   */
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  /**
+   * Método que se encarga de obtener todas las categorías
+   * @returns Arreglo con todas las categorías
+   * @example http://localhost:3000/categories
+   */
   @Get()
   @HttpCode(200)
   async findAll() {
@@ -26,12 +38,25 @@ export class CategoriesController {
     return await this.categoriesService.findAll()
   }
 
+  /**
+   * Método que se encarga de obtener una categoría dado el ID
+   * @param id Identificador de la categoría
+   * @returns Categoría encontrada
+   * @example http://localhost:3000/categories/1
+   */
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id') id: number) {
     this.logger.log(`Obteniendo categoría por id: ${id}`)
     return await this.categoriesService.findOne(+id)
   }
+
+  /**
+   * Método que se encarga de crear una categoría
+   * @param createCategoryDto DTO de creación de categoría
+   * @returns Categoría creada
+   * @example http://localhost:3000/categories
+   */
   @Post()
   @HttpCode(201)
   async create(@Body() createCategoryDto: CreateCategoryDto) {
@@ -41,6 +66,13 @@ export class CategoriesController {
     return await this.categoriesService.create(createCategoryDto)
   }
 
+  /**
+   * Método que se encarga de actualizar una categoría
+   * @param id Identificador de la categoría
+   * @param updateCategoryDto DTO de actualización de categoría
+   * @returns Categoría actualizada
+   * @example http://localhost:3000/categories/1
+   */
   @Put(':id')
   @HttpCode(200)
   async update(
@@ -55,6 +87,12 @@ export class CategoriesController {
     return await this.categoriesService.update(+id, updateCategoryDto)
   }
 
+  /**
+   * Método que se encarga de eliminar una categoría
+   * @param id Identificador de la categoría
+   * @returns Categoría eliminada
+   * @example http://localhost:3000/categories/1
+   */
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id') id: number) {

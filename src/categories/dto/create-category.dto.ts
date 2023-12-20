@@ -1,6 +1,9 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator'
 import { CategoryType } from '../entities/category.entity'
 
+/**
+ * DTO para crear una categoría
+ */
 export class CreateCategoryDto {
   @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
   @IsString({ message: 'El nombre debe de ser un String' })

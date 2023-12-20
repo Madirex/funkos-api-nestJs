@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Category } from './entities/category.entity'
 import { CategoriesMapper } from './mappers/categories.mapper'
 
+/**
+ * Módulo de categorías
+ */
 @Module({
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoriesMapper],
