@@ -8,6 +8,7 @@ import { CategoriesModule } from './categories/categories.module'
  */
 @Module({
   imports: [
+    CategoriesModule,
     FunkosModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -19,7 +20,6 @@ import { CategoriesModule } from './categories/categories.module'
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
     }),
-    CategoriesModule,
   ],
   controllers: [],
   providers: [],
