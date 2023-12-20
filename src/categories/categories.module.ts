@@ -9,8 +9,8 @@ import { CategoriesMapper } from './mappers/categories.mapper'
  * Módulo de categorías
  */
 @Module({
+  imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoriesMapper],
-  imports: [TypeOrmModule.forFeature([Category])],
 })
 export class CategoriesModule {}

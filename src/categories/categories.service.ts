@@ -52,7 +52,7 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`Categoría con ID: ${id} no encontrada`)
     }
-    return this.categoriesRepository.findOneBy({ id })
+    return category
   }
 
   /**
@@ -66,7 +66,7 @@ export class CategoriesService {
     )
 
     if (createCategoryDto.name) {
-      const category = await this.existsName(createCategoryDto.name)
+      const category = await this.getByName(createCategoryDto.name.trim())
 
       if (category) {
         this.logger.log(`Categoría con nombre: ${category.name} ya existe`)
@@ -76,7 +76,7 @@ export class CategoriesService {
       }
     }
 
-    const category = this.categoriesMapper.mapCreateToEntity(createCategoryDto)
+    const category = this.categoriesMapper.toEntity(createCategoryDto)
 
     return await this.categoriesRepository.save({
       ...category,
@@ -107,7 +107,7 @@ export class CategoriesService {
     }
 
     if (updateCategoryDto.name) {
-      const category = await this.existsName(updateCategoryDto.name)
+      const category = await this.getByName(updateCategoryDto.name.trim())
 
       if (category && category.id !== id) {
         this.logger.log(`Categoría con nombre: ${category.name} ya existe`)
@@ -146,12 +146,12 @@ export class CategoriesService {
   }
 
   /**
-   * Verificar si existe una categoría con el nombre
+   * Retorna una categoría dado el nombre
    * @param name Nombre de la categoría
    * @private Función privada
    * @returns Categoría encontrada
    */
-  private async existsName(name: string) {
+  private async getByName(name: string) {
     return await this.categoriesRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {

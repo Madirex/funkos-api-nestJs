@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { Funko } from '../../funkos/entities/funko.entity'
 
 /**
  * @description Enumeración de los tipos de categorías
@@ -53,4 +55,7 @@ export class Category {
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean
+
+  @OneToMany(() => Funko, (funko) => funko.category)
+  funkos: Funko[]
 }
