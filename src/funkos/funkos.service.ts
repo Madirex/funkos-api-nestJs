@@ -41,7 +41,9 @@ export class FunkosService {
    */
   async findAll() {
     this.logger.log('Obteniendo todos los Funkos')
-    return this.funkoRepository.find()
+    return this.funkoRepository.find({
+      relations: ['category'],
+    })
   }
 
   /**
