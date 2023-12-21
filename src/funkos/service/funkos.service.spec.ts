@@ -57,8 +57,8 @@ describe('FunkosService', () => {
     it('debería devolver un array de Funkos', async () => {
       const mockFunkos: Funko[] = []
       jest.spyOn(funkoRepository, 'find').mockResolvedValue(mockFunkos)
-      const resultado = await service.findAll()
-      expect(resultado).toEqual(mockFunkos)
+      const res = await service.findAll()
+      expect(res).toEqual(mockFunkos)
       expect(funkoRepository.find).toHaveBeenCalled()
     })
   })
@@ -87,8 +87,8 @@ describe('FunkosService', () => {
       }
 
       jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(mockFunko)
-      const resultado = await service.findOne(id)
-      expect(resultado).toEqual(mockFunko)
+      const res = await service.findOne(id)
+      expect(res).toEqual(mockFunko)
       expect(funkoRepository.findOne).toHaveBeenCalledWith({
         where: { id: id },
         relations: ['category'],
@@ -140,8 +140,8 @@ describe('FunkosService', () => {
       jest.spyOn(service, 'getCategoryByName').mockResolvedValue(null)
       jest.spyOn(funkoMapperMock, 'toEntity').mockReturnValue(mockFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockFunko)
-      const resultado = await service.create(createFunkoDto)
-      expect(resultado).toEqual(mockFunko)
+      const res = await service.create(createFunkoDto)
+      expect(res).toEqual(mockFunko)
       expect(service.getByName).toHaveBeenCalled()
       expect(service.getCategoryByName).toHaveBeenCalled()
       expect(funkoMapperMock.toEntity).toHaveBeenCalledWith(
@@ -226,9 +226,9 @@ describe('FunkosService', () => {
         .mockReturnValue(existingFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(existingFunko)
 
-      const resultado = await service.update(id, updateFunkoDto)
+      const res = await service.update(id, updateFunkoDto)
 
-      expect(resultado).toEqual(existingFunko)
+      expect(res).toEqual(existingFunko)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(service.getByName).toHaveBeenCalledWith(updateFunkoDto.name.trim())
       expect(service.getCategoryByName).toHaveBeenCalledWith(
@@ -333,9 +333,9 @@ describe('FunkosService', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(existingFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(existingFunko)
 
-      const resultado = await service.remove(id)
+      const res = await service.remove(id)
 
-      expect(resultado).toEqual(existingFunko)
+      expect(res).toEqual(existingFunko)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(funkoRepository.save).toHaveBeenCalledWith({
         ...existingFunko,
@@ -384,9 +384,9 @@ describe('FunkosService', () => {
         .spyOn(funkoRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder as any)
 
-      const resultado = await service.getByName(nombre)
+      const res = await service.getByName(nombre)
 
-      expect(resultado).toEqual(mockFunko)
+      expect(res).toEqual(mockFunko)
       expect(funkoRepository.createQueryBuilder).toHaveBeenCalled()
     })
   })
