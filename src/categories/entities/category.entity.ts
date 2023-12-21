@@ -38,6 +38,9 @@ export class Category {
   @Column({ name: 'name', type: 'varchar', length: 255 })
   name: string
 
+  @OneToMany(() => Funko, (funko) => funko.category)
+  funkos: Funko[]
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
@@ -55,7 +58,4 @@ export class Category {
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean
-
-  @OneToMany(() => Funko, (funko) => funko.category)
-  funkos: Funko[]
 }
