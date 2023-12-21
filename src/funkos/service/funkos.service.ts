@@ -185,7 +185,7 @@ export class FunkosService {
    * @private Función privada
    * @returns Funko encontrado
    */
-  private async getByName(name: string) {
+  async getByName(name: string) {
     return await this.funkoRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {
@@ -200,7 +200,7 @@ export class FunkosService {
    * @private Función privada
    * @returns Categoría encontrada
    */
-  private async getCategoryByName(name: string) {
+  async getCategoryByName(name: string) {
     return await this.categoryRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {
