@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CreateCategoryDto } from '../dto/create-category.dto'
-import { Category, CategoryType } from '../entities/category.entity'
+import { Category } from '../entities/category.entity'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { plainToClass } from 'class-transformer'
 
@@ -30,7 +30,7 @@ export class CategoriesMapper {
     category.categoryType = dto.categoryType
       ? dto.categoryType
       : entity.categoryType
-    category.createdAt = entity.createdAt || new Date()
+    category.createdAt = entity.createdAt
     category.updatedAt = new Date()
     category.name = dto.name ? dto.name.trim() : entity.name
     category.isActive = entity.isActive

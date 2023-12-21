@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { FunkosService } from './funkos.service'
-import { FunkosController } from './funkos.controller'
+import { FunkosService } from './service/funkos.service'
+import { FunkosController } from './controller/funkos.controller'
 import { FunkoMapper } from './mappers/funko.mapper'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Funko } from './entities/funko.entity'

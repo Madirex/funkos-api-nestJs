@@ -9,9 +9,9 @@ import {
   HttpCode,
   Logger,
 } from '@nestjs/common'
-import { FunkosService } from './funkos.service'
-import { CreateFunkoDto } from './dto/create-funko.dto'
-import { UpdateFunkoDto } from './dto/update-funko.dto'
+import { FunkosService } from '../service/funkos.service'
+import { CreateFunkoDto } from '../dto/create-funko.dto'
+import { UpdateFunkoDto } from '../dto/update-funko.dto'
 
 /**
  * Controlador de Funkos

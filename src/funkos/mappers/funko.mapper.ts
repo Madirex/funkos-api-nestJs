@@ -43,7 +43,7 @@ export class FunkoMapper {
   ): Funko {
     const funko = new Funko()
     funko.id = entity.id
-    funko.createdAt = entity.createdAt || new Date()
+    funko.createdAt = entity.createdAt
     funko.updatedAt = new Date()
     funko.name = dto.name ? dto.name.trim() : entity.name
     funko.price = dto.price || entity.price

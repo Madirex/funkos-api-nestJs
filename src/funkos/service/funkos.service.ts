@@ -6,12 +6,12 @@ import {
   Param,
   ParseUUIDPipe,
 } from '@nestjs/common'
-import { CreateFunkoDto } from './dto/create-funko.dto'
-import { UpdateFunkoDto } from './dto/update-funko.dto'
-import { FunkoMapper } from './mappers/funko.mapper'
-import { Funko } from './entities/funko.entity'
+import { CreateFunkoDto } from '../dto/create-funko.dto'
+import { UpdateFunkoDto } from '../dto/update-funko.dto'
+import { FunkoMapper } from '../mappers/funko.mapper'
+import { Funko } from '../entities/funko.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Category } from '../categories/entities/category.entity'
+import { Category } from '../../categories/entities/category.entity'
 import { Repository } from 'typeorm'
 
 /**
