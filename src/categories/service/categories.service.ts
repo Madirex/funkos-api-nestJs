@@ -151,7 +151,7 @@ export class CategoriesService {
    * @private Función privada
    * @returns Categoría encontrada
    */
-  private async getByName(name: string) {
+  async getByName(name: string) {
     return await this.categoriesRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {
