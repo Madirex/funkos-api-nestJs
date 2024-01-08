@@ -41,7 +41,7 @@ export class CategoriesService {
   async findOne(id: number) {
     this.logger.log(`Obteniendo categoría por id: ${id}`)
     const isNumeric = !isNaN(Number(id))
-    if (!id || !isNumeric) {
+    if (!id || !isNumeric || id < 0 || id > 2147483647) {
       throw new BadRequestException('ID no válido')
     }
     const category = await this.categoriesRepository.findOneBy({ id })
@@ -94,7 +94,7 @@ export class CategoriesService {
 
     const isNumeric = !isNaN(Number(id))
 
-    if (!id || !isNumeric) {
+    if (!id || !isNumeric || id < 0 || id > 2147483647) {
       throw new BadRequestException('ID no válido')
     }
 
@@ -134,7 +134,7 @@ export class CategoriesService {
   async remove(id: number) {
     this.logger.log(`Eliminando categoría con id: ${id}`)
     const isNumeric = !isNaN(Number(id))
-    if (!id || !isNumeric) {
+    if (!id || !isNumeric || id < 0 || id > 2147483647) {
       throw new BadRequestException('ID no válido')
     }
     const categoryToRemove = await this.findOne(id)
