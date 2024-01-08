@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, Logger, NotFoundException, Param } from '@nestjs/common'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { FunkoMapper } from '../mappers/funko.mapper'
@@ -13,6 +6,7 @@ import { Funko } from '../entities/funko.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Category } from '../../categories/entities/category.entity'
 import { Repository } from 'typeorm'
+import { isUUID } from 'class-validator'
 
 /**
  * Servicio de Funkos
@@ -51,9 +45,10 @@ export class FunkosService {
    * @param id Identificador del Funko
    * @returns Funko encontrado
    */
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
+  async findOne(@Param('id') id: string): Promise<Funko> {
     this.logger.log(`Obteniendo Funko por id: ${id}`)
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+    if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
     const funko = await this.funkoRepository.findOne({
@@ -92,6 +87,9 @@ export class FunkosService {
       category = await this.getCategoryByName(createFunkoDto.category)
     }
     const funko = this.funkoMapper.toEntity(createFunkoDto, category)
+    if (funko.category == null){
+      delete funko.category
+    }
     return await this.funkoRepository.save({
       ...funko,
     })
@@ -104,7 +102,7 @@ export class FunkosService {
    * @returns Funko actualizado
    */
   async update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
     updateFunkoDto: UpdateFunkoDto,
   ): Promise<
     {
@@ -123,7 +121,9 @@ export class FunkosService {
       `Actualizando Funko con datos: ${JSON.stringify(updateFunkoDto)}`,
     )
 
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+
+    if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
 
@@ -156,6 +156,14 @@ export class FunkosService {
       category,
     )
 
+    if (funkoToUpdate.category != null){
+      delete funkoToUpdate.category
+    }
+
+    if (funko.category != null){
+      delete funko.category
+    }
+
     return await this.funkoRepository.save({
       ...funkoToUpdate,
       ...funko,
@@ -167,9 +175,10 @@ export class FunkosService {
    * @param id Identificador del Funko
    * @returns Funko eliminado
    */
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<Funko> {
+  async remove(@Param('id') id: string): Promise<Funko> {
     this.logger.log(`Eliminando Funko con id: ${id}`)
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+    if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
     const funkoToRemove = await this.findOne(id)

@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -45,7 +40,8 @@ export class CategoriesService {
    */
   async findOne(id: number) {
     this.logger.log(`Obteniendo categoría por id: ${id}`)
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+    if (!id || !isNumeric) {
       throw new BadRequestException('ID no válido')
     }
     const category = await this.categoriesRepository.findOneBy({ id })
@@ -96,7 +92,9 @@ export class CategoriesService {
       )}`,
     )
 
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+
+    if (!id || !isNumeric) {
       throw new BadRequestException('ID no válido')
     }
 
@@ -135,7 +133,8 @@ export class CategoriesService {
    */
   async remove(id: number) {
     this.logger.log(`Eliminando categoría con id: ${id}`)
-    if (!id) {
+    const isNumeric = !isNaN(Number(id))
+    if (!id || !isNumeric) {
       throw new BadRequestException('ID no válido')
     }
     const categoryToRemove = await this.findOne(id)
