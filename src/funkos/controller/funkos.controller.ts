@@ -1,90 +1,163 @@
-import { Body, Controller, Delete, Get, HttpCode, Logger, Param, Post, Put } from '@nestjs/common'
-import { FunkosService } from '../service/funkos.service'
-import { CreateFunkoDto } from '../dto/create-funko.dto'
-import { UpdateFunkoDto } from '../dto/update-funko.dto'
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Logger,
+    Param,
+    Patch,
+    Post,
+    Put,
+    Req,
+    UploadedFile,
+    UseInterceptors
+} from '@nestjs/common'
+import {FunkosService} from '../service/funkos.service'
+import {CreateFunkoDto} from '../dto/create-funko.dto'
+import {UpdateFunkoDto} from '../dto/update-funko.dto'
+import {FileInterceptor} from "@nestjs/platform-express";
+import {diskStorage} from "multer";
+import {parse} from "ts-jest";
+import {extname} from "path";
+import {Request} from 'express'
 
 /**
  * Controlador de Funkos
  */
 @Controller('funkos')
 export class FunkosController {
-  private readonly logger = new Logger(FunkosController.name)
+    private readonly logger = new Logger(FunkosController.name)
 
-  /**
-   * Constructor
-   * @param funkosService Servicio de Funkos
-   */
-  constructor(private readonly funkosService: FunkosService) {}
+    /**
+     * Constructor
+     * @param funkosService Servicio de Funkos
+     */
+    constructor(private readonly funkosService: FunkosService) {
+    }
 
-  /**
-   * Obtiene todos los Funkos
-   * @returns Arreglo con todos los Funkos
-   * @example http://localhost:3000/v1/funkos
-   */
-  @Get()
-  @HttpCode(200)
-  async findAll() {
-    this.logger.log('Obteniendo todos los Funkos')
-    return await this.funkosService.findAll()
-  }
+    /**
+     * Obtiene todos los Funkos
+     * @returns Arreglo con todos los Funkos
+     * @example http://localhost:3000/v1/funkos
+     */
+    @Get()
+    @HttpCode(200)
+    async findAll() {
+        this.logger.log('Obteniendo todos los Funkos')
+        return await this.funkosService.findAll()
+    }
 
-  /**
-   * Obtiene un Funko dado el ID
-   * @param id Identificador del Funko
-   * @returns Funko encontrado
-   * @example http://localhost:3000/v1/funkos/1
-   */
-  @Get(':id')
-  @HttpCode(200)
-  async findOne(@Param('id') id: string) {
-    this.logger.log(`Obteniendo Funko por id: ${id}`)
-    return await this.funkosService.findOne(id)
-  }
+    /**
+     * Obtiene un Funko dado el ID
+     * @param id Identificador del Funko
+     * @returns Funko encontrado
+     * @example http://localhost:3000/v1/funkos/1
+     */
+    @Get(':id')
+    @HttpCode(200)
+    async findOne(@Param('id') id: string) {
+        this.logger.log(`Obteniendo Funko por id: ${id}`)
+        return await this.funkosService.findOne(id)
+    }
 
-  /**
-   * Crea un Funko
-   * @param createFunkoDto DTO de creación de Funko
-   * @returns Funko creado
-   * @example http://localhost:3000/v1/funkos
-   */
-  @Post()
-  @HttpCode(201)
-  async create(@Body() createFunkoDto: CreateFunkoDto) {
-    this.logger.log(
-      `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
+    /**
+     * Crea un Funko
+     * @param createFunkoDto DTO de creación de Funko
+     * @returns Funko creado
+     * @example http://localhost:3000/v1/funkos
+     */
+    @Post()
+    @HttpCode(201)
+    async create(@Body() createFunkoDto: CreateFunkoDto) {
+        this.logger.log(
+            `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
+        )
+        return await this.funkosService.create(createFunkoDto)
+    }
+
+    /**
+     * Actualiza un Funko dado el ID
+     * @param id Identificador del Funko
+     * @param updateFunkoDto DTO de actualización de Funko
+     * @returns Funko actualizado
+     * @example http://localhost:3000/v1/funkos/1
+     */
+    @Put(':id')
+    @HttpCode(200)
+    async update(
+        @Param('id') id: string,
+        @Body() updateFunkoDto: UpdateFunkoDto,
+    ) {
+        this.logger.log(
+            `Actualizando Funko ${id} con datos: ${JSON.stringify(updateFunkoDto)}`,
+        )
+        return await this.funkosService.update(id, updateFunkoDto)
+    }
+
+    /**
+     * Elimina un Funko dado el ID
+     * @param id Identificador del Funko
+     * @returns Funko eliminado
+     * @example http://localhost:3000/v1/funkos/1
+     */
+    @Delete(':id')
+    @HttpCode(204)
+    async remove(@Param('id') id: string) {
+        this.logger.log(`Eliminando Funko con id: ${id}`)
+        return await this.funkosService.remove(id)
+    }
+
+    /**
+     * Actualiza la imagen de un Funko
+     * @param id Identificador del Funko
+     * @param file Fichero de imagen
+     * @param req Request
+     */
+    @Patch('/image/:id')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            storage: diskStorage({
+                destination: process.env.UPLOADS_DIR || './storage-dir',
+                filename: (req, file, cb) => {
+                    const {name} = parse(file.originalname)
+                    const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+                    const fileExt = extname(file.originalname)
+                    cb(null, `${fileName}${fileExt}`)
+                },
+            }),
+            // Validación de archivos
+            fileFilter: (req, file, cb) => {
+                const allowedMimes = ['image/jpeg', 'image/png', 'image/gif']
+                const maxFileSizeInBytes = 1024 * 1024 * 6 // 6 megabytes
+                if (!allowedMimes.includes(file.mimetype)) {
+                    cb(
+                        new BadRequestException(
+                            'Fichero no soportado. No es del tipo imagen válido',
+                        ),
+                        false,
+                    )
+                } else if (file.size > maxFileSizeInBytes) {
+                    cb(
+                        new BadRequestException(
+                            'El tamaño del archivo no puede ser mayor a ' + maxFileSizeInBytes + ' bytes.',
+                        ),
+                        false,
+                    )
+                } else {
+                    cb(null, true)
+                }
+            },
+        }),
     )
-    return await this.funkosService.create(createFunkoDto)
-  }
+    async updateImage(
+        @Param('id') id: string,
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req: Request,
+    ) {
+        this.logger.log(`Actualizando imagen al Funko con id ${id}:  ${file}`)
 
-  /**
-   * Actualiza un Funko dado el ID
-   * @param id Identificador del Funko
-   * @param updateFunkoDto DTO de actualización de Funko
-   * @returns Funko actualizado
-   * @example http://localhost:3000/v1/funkos/1
-   */
-  @Put(':id')
-  @HttpCode(200)
-  async update(
-    @Param('id') id: string,
-    @Body() updateFunkoDto: UpdateFunkoDto,
-  ) {
-    this.logger.log(
-      `Actualizando Funko ${id} con datos: ${JSON.stringify(updateFunkoDto)}`,
-    )
-    return await this.funkosService.update(id, updateFunkoDto)
-  }
-
-  /**
-   * Elimina un Funko dado el ID
-   * @param id Identificador del Funko
-   * @returns Funko eliminado
-   * @example http://localhost:3000/v1/funkos/1
-   */
-  @Delete(':id')
-  @HttpCode(204)
-  async remove(@Param('id') id: string) {
-    this.logger.log(`Eliminando Funko con id: ${id}`)
-    return await this.funkosService.remove(id)
-  }
+        return await this.funkosService.updateImage(id, file, req, true)
+    }
 }

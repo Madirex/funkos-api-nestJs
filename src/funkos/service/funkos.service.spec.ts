@@ -12,15 +12,22 @@ import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { v4 as uuidv4 } from 'uuid'
 import { FunkoMapper } from '../mappers/funko.mapper'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
+import {StorageService} from "../../storage/storage.service";
 
 describe('FunkosService', () => {
   let service: FunkosService
   let funkoRepository: Repository<Funko>
   let categoryRepository: Repository<Category>
+  let storageService: StorageService
 
   const funkoMapperMock = {
     toEntity: jest.fn(),
     mapUpdateToEntity: jest.fn(),
+  }
+
+  const storageServiceMock = {
+    removeFile: jest.fn(),
+    getFileNameWithoutUrl: jest.fn(),
   }
 
   beforeEach(async () => {
@@ -39,6 +46,7 @@ describe('FunkosService', () => {
           provide: FunkoMapper,
           useValue: funkoMapperMock,
         },
+        { provide: StorageService, useValue: storageServiceMock },
       ],
     }).compile()
 
@@ -47,6 +55,7 @@ describe('FunkosService', () => {
     categoryRepository = module.get<Repository<Category>>(
       getRepositoryToken(Category),
     )
+    storageService = module.get<StorageService>(StorageService)
   })
 
   it('debería estar definido', () => {
@@ -417,6 +426,36 @@ describe('FunkosService', () => {
 
       expect(res).toEqual(categoryMock)
       expect(categoryRepository.createQueryBuilder).toHaveBeenCalled()
+    })
+  })
+
+  describe('updateImage', () => {
+    it('debería actualizar la imagen de un Funko', async () => {
+      const mockRequest = {
+        protocol: 'http',
+        get: () => 'localhost',
+      }
+      const mockFile = {
+        filename: 'new_image',
+      }
+
+      const mockNewFunko = new Funko()
+
+      const mockResponseFunko = new Funko()
+      mockResponseFunko.image = 'http://localhost/storage/new_image';
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockNewFunko)
+
+      jest
+          .spyOn(funkoRepository, 'save')
+          .mockResolvedValue(mockNewFunko)
+
+      expect(
+          await service.updateImage(uuidv4(), mockFile as any, mockRequest as any, true),
+      ).toEqual(mockResponseFunko)
+
+      expect(storageService.removeFile).toHaveBeenCalled()
+      expect(storageService.getFileNameWithoutUrl).toHaveBeenCalled()
     })
   })
 })

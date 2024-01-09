@@ -1,12 +1,14 @@
-import { BadRequestException, Injectable, Logger, NotFoundException, Param } from '@nestjs/common'
-import { CreateFunkoDto } from '../dto/create-funko.dto'
-import { UpdateFunkoDto } from '../dto/update-funko.dto'
-import { FunkoMapper } from '../mappers/funko.mapper'
-import { Funko } from '../entities/funko.entity'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Category } from '../../categories/entities/category.entity'
-import { Repository } from 'typeorm'
-import { isUUID } from 'class-validator'
+import {BadRequestException, Injectable, Logger, NotFoundException, Param} from '@nestjs/common'
+import {CreateFunkoDto} from '../dto/create-funko.dto'
+import {UpdateFunkoDto} from '../dto/update-funko.dto'
+import {FunkoMapper} from '../mappers/funko.mapper'
+import {Funko} from '../entities/funko.entity'
+import {InjectRepository} from '@nestjs/typeorm'
+import {Category} from '../../categories/entities/category.entity'
+import {Repository} from 'typeorm'
+import {isUUID} from 'class-validator'
+import {StorageService} from "../../storage/storage.service";
+import { Request } from 'express'
 
 /**
  * Servicio de Funkos
@@ -20,6 +22,7 @@ export class FunkosService {
    * @param funkoRepository Repositorio de Funkos
    * @param categoryRepository Repositorio de categorías
    * @param funkoMapper Mapper de Funkos
+   * @param storageService Servicio de Storage
    */
   constructor(
     @InjectRepository(Funko)
@@ -27,6 +30,7 @@ export class FunkosService {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
     private readonly funkoMapper: FunkoMapper,
+    private readonly storageService: StorageService,
   ) {}
 
   /**
@@ -216,5 +220,58 @@ export class FunkosService {
         name: name.toLowerCase(),
       })
       .getOne()
+  }
+
+  /**
+   * Actualiza la imagen de un Funko
+   * @param id Identificador del Funko
+   * @param file Fichero
+   * @param req Petición
+   * @param withUrl Indica si se debe generar la URL
+   */
+  public async updateImage(
+      id: string,
+      file: Express.Multer.File,
+      req: Request,
+      withUrl: boolean = true,
+  ) {
+    this.logger.log(`Actualizando imagen Funko por id: ${id}`)
+    const funkoToUpdate = await this.findOne(id)
+
+    if (funkoToUpdate.image !== Funko.IMAGE_DEFAULT) {
+      this.logger.log(`Borrando imagen ${funkoToUpdate.image}`)
+      let imagePath = funkoToUpdate.image
+      if (withUrl) {
+        imagePath = this.storageService.getFileNameWithoutUrl(
+            funkoToUpdate.image,
+        )
+      }
+      try {
+        this.storageService.removeFile(imagePath)
+      } catch (error) {
+        this.logger.error(error)
+      }
+    }
+
+    if (!file) {
+      throw new BadRequestException('Fichero no encontrado.')
+    }
+
+    let filePath: string
+
+    if (withUrl) {
+      this.logger.log(`Generando url para ${file.filename}`)
+      const apiVersion = process.env.API_VERSION
+          ? `/${process.env.API_VERSION}`
+          : ''
+      filePath = `${req.protocol}://${req.get('host')}${apiVersion}/storage/${
+          file.filename
+      }`
+    } else {
+      filePath = file.filename
+    }
+
+    funkoToUpdate.image = filePath
+    return await this.funkoRepository.save(funkoToUpdate)
   }
 }
