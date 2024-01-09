@@ -3,6 +3,7 @@ import { CreateCategoryDto } from '../dto/create-category.dto'
 import { Category } from '../entities/category.entity'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { plainToClass } from 'class-transformer'
+import { ResponseCategoryDto } from '../dto/response-category.dto'
 
 /**
  * Clase que se encarga de mapear los DTO de categorías a entidades
@@ -35,5 +36,13 @@ export class CategoriesMapper {
     category.name = dto.name ? dto.name.trim() : entity.name
     category.isActive = entity.isActive
     return category
+  }
+
+  /**
+   * Mapea una entidad de categoría a un DTO de respuesta
+   * @param entity Entidad de categoría
+   */
+  mapEntityToResponseDto(entity: Category): ResponseCategoryDto {
+    return plainToClass(ResponseCategoryDto, entity)
   }
 }

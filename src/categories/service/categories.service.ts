@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -30,7 +35,10 @@ export class CategoriesService {
    */
   async findAll() {
     this.logger.log('Obteniendo todas las categorías')
-    return this.categoriesRepository.find()
+    const categories = await this.categoriesRepository.find()
+    return categories.map((category) =>
+      this.categoriesMapper.mapEntityToResponseDto(category),
+    )
   }
 
   /**
@@ -48,7 +56,7 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException(`Categoría con ID: ${id} no encontrada`)
     }
-    return category
+    return this.categoriesMapper.mapEntityToResponseDto(category)
   }
 
   /**
@@ -74,9 +82,10 @@ export class CategoriesService {
 
     const category = this.categoriesMapper.toEntity(createCategoryDto)
 
-    return await this.categoriesRepository.save({
+    const categoryResponse = await this.categoriesRepository.save({
       ...category,
     })
+    return this.categoriesMapper.mapEntityToResponseDto(categoryResponse)
   }
 
   /**
@@ -115,15 +124,18 @@ export class CategoriesService {
       }
     }
 
+    const categoryEntity = await this.categoriesRepository.findOneBy({ id })
+
     const category = this.categoriesMapper.mapUpdateToEntity(
       updateCategoryDto,
-      categoryToUpdate,
+      categoryEntity,
     )
 
-    return await this.categoriesRepository.save({
+    const categoryResponse = await this.categoriesRepository.save({
       ...categoryToUpdate,
       ...category,
     })
+    return this.categoriesMapper.mapEntityToResponseDto(categoryResponse)
   }
 
   /**
@@ -138,10 +150,11 @@ export class CategoriesService {
       throw new BadRequestException('ID no válido')
     }
     const categoryToRemove = await this.findOne(id)
-    return await this.categoriesRepository.save({
+    const category = await this.categoriesRepository.save({
       ...categoryToRemove,
       isActive: false,
     })
+    return this.categoriesMapper.mapEntityToResponseDto(category)
   }
 
   /**
@@ -151,11 +164,12 @@ export class CategoriesService {
    * @returns Categoría encontrada
    */
   async getByName(name: string) {
-    return await this.categoriesRepository
+    const category = await this.categoriesRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {
         name: name.toLowerCase(),
       })
       .getOne()
+    return this.categoriesMapper.mapEntityToResponseDto(category)
   }
 }
