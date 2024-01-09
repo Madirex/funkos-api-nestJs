@@ -8,6 +8,7 @@ import { CategoriesMapper } from '../mappers/categories.mapper'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { CategoriesNotificationsGateway } from '../../websockets/notifications/categories-notifications.gateway'
+import { ResponseCategoryDto } from '../dto/response-category.dto'
 
 describe('CategoriesService', () => {
   let service: CategoriesService
@@ -17,6 +18,7 @@ describe('CategoriesService', () => {
   const categoriesMapperMock = {
     toEntity: jest.fn(),
     mapUpdateToEntity: jest.fn(),
+    mapEntityToResponseDto: jest.fn(),
   }
 
   const categoriesNotificationsGatewayMock = {
@@ -59,7 +61,20 @@ describe('CategoriesService', () => {
     it('debería devolver un array de categorías', async () => {
       // Arrange
       const mockCategories: Category[] = []
+
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: 2,
+        name: 'Categoría Ejemplo',
+        categoryType: CategoryType.DISNEY,
+        isActive: true,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
+
       jest.spyOn(categoriesRepository, 'find').mockResolvedValue(mockCategories)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act
       const res = await service.findAll()
@@ -83,16 +98,27 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: id,
+        name: 'Categoría Ejemplo',
+        categoryType: CategoryType.DISNEY,
+        isActive: true,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest
         .spyOn(categoriesRepository, 'findOneBy')
         .mockResolvedValue(mockCategory)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act
       const res = await service.findOne(id)
 
       // Assert
-      expect(res).toEqual(mockCategory)
-      expect(categoriesRepository.findOneBy).toHaveBeenCalledWith({ id })
+      expect(res).toEqual(mockCategoryResponse)
     })
 
     it('debería lanzar NotFoundException si no se encuentra la categoría con el ID', async () => {
@@ -126,16 +152,27 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: 1,
+        name: 'Nueva Categoría',
+        isActive: true,
+        categoryType: CategoryType.DISNEY,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest.spyOn(service, 'getByName').mockResolvedValue(null)
       jest.spyOn(categoriesMapperMock, 'toEntity').mockReturnValue(mockCategory)
       jest.spyOn(categoriesRepository, 'save').mockResolvedValue(mockCategory)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act
       const res = await service.create(createCategoryDto)
 
       // Assert
-      expect(res).toEqual(mockCategory)
-      expect(service.getByName).toHaveBeenCalled()
+      expect(res).toEqual(mockCategoryResponse)
       expect(categoriesMapperMock.toEntity).toHaveBeenCalledWith(
         createCategoryDto,
       )
@@ -159,7 +196,18 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: 2,
+        name: 'Categoría Existente',
+        isActive: true,
+        categoryType: CategoryType.DISNEY,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest.spyOn(service, 'getByName').mockResolvedValue(existingCategory)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act & Assert
       await expect(service.create(createCategoryDto)).rejects.toThrow(
@@ -187,6 +235,14 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: id,
+        name: 'Categoría Antigua',
+        isActive: true,
+        categoryType: CategoryType.DISNEY,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest.spyOn(service, 'findOne').mockResolvedValue(existingCategory)
       jest.spyOn(service, 'getByName').mockResolvedValue(null)
       jest
@@ -195,6 +251,9 @@ describe('CategoriesService', () => {
       jest
         .spyOn(categoriesRepository, 'save')
         .mockResolvedValue(existingCategory)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act
       const res = await service.update(id, updateCategoryDto)
@@ -277,16 +336,28 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: id,
+        name: 'Categoría a Eliminar',
+        categoryType: CategoryType.DISNEY,
+        isActive: true,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest.spyOn(service, 'findOne').mockResolvedValue(existingCategory)
       jest
         .spyOn(categoriesRepository, 'save')
         .mockResolvedValue(existingCategory)
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
 
       // Act
       const res = await service.remove(id)
 
       // Assert
-      expect(res).toEqual(existingCategory)
+      expect(res).toEqual(mockCategoryResponse)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(categoriesRepository.save).toHaveBeenCalledWith({
         ...existingCategory,
@@ -313,16 +384,28 @@ describe('CategoriesService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         funkos: [],
       }
+      const mockCategoryResponse: ResponseCategoryDto = {
+        id: 3,
+        name: categoryName,
+        isActive: true,
+        categoryType: CategoryType.DISNEY,
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+      }
       jest.spyOn(categoriesRepository, 'createQueryBuilder').mockReturnValue({
         where: jest.fn().mockReturnThis(),
         getOne: jest.fn().mockResolvedValue(mockCategory),
       } as any)
 
+      jest
+        .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockCategoryResponse)
+
       // Act
       const res = await service.getByName(categoryName)
 
       // Assert
-      expect(res).toEqual(mockCategory)
+      expect(res).toEqual(mockCategoryResponse)
       expect(categoriesRepository.createQueryBuilder).toHaveBeenCalled()
     })
   })

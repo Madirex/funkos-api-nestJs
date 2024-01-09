@@ -5,6 +5,7 @@ import { CategoriesService } from '../service/categories.service'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { Category, CategoryType } from '../entities/category.entity'
+import { ResponseCategoryDto } from '../dto/response-category.dto'
 
 describe('CategoriesController', () => {
   let controller: CategoriesController
@@ -49,7 +50,7 @@ describe('CategoriesController', () => {
       ]
 
       jest.spyOn(service, 'findAll').mockResolvedValue(testCategories)
-      const result: Category[] = await controller.findAll()
+      const result: ResponseCategoryDto[] = await controller.findAll()
 
       expect(result).toEqual(testCategories)
       expect(service.findAll).toHaveBeenCalled()
