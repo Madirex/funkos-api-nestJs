@@ -7,14 +7,20 @@ import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { CategoriesMapper } from '../mappers/categories.mapper'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
+import { CategoriesNotificationsGateway } from '../../websockets/notifications/categories-notifications.gateway'
 
 describe('CategoriesService', () => {
   let service: CategoriesService
   let categoriesRepository: Repository<Category>
+  let categoriesNotificationsGateway: CategoriesNotificationsGateway
 
   const categoriesMapperMock = {
     toEntity: jest.fn(),
     mapUpdateToEntity: jest.fn(),
+  }
+
+  const categoriesNotificationsGatewayMock = {
+    sendMessage: jest.fn(),
   }
 
   beforeEach(async () => {
@@ -29,12 +35,19 @@ describe('CategoriesService', () => {
           provide: CategoriesMapper,
           useValue: categoriesMapperMock,
         },
+        {
+          provide: CategoriesNotificationsGateway,
+          useValue: categoriesNotificationsGatewayMock,
+        },
       ],
     }).compile()
 
     service = module.get<CategoriesService>(CategoriesService)
     categoriesRepository = module.get<Repository<Category>>(
       getRepositoryToken(Category),
+    )
+    categoriesNotificationsGateway = module.get<CategoriesNotificationsGateway>(
+      CategoriesNotificationsGateway,
     )
   })
 

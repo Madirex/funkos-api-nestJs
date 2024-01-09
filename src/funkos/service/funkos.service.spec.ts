@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { FunkosService } from './funkos.service'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Funko } from '../entities/funko.entity'
-import { Category, CategoryType } from '../../categories/entities/category.entity'
+import {
+  Category,
+  CategoryType,
+} from '../../categories/entities/category.entity'
 import { Repository } from 'typeorm'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
@@ -10,12 +13,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { FunkoMapper } from '../mappers/funko.mapper'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { StorageService } from '../../storage/storage.service'
+import { FunkosNotificationsGateway } from '../../websockets/notifications/funkos-notifications.gateway'
 
 describe('FunkosService', () => {
   let service: FunkosService
   let funkoRepository: Repository<Funko>
   let categoryRepository: Repository<Category>
   let storageService: StorageService
+  let funkosNotificationsGateway: FunkosNotificationsGateway
 
   const funkoMapperMock = {
     toEntity: jest.fn(),
@@ -25,6 +30,10 @@ describe('FunkosService', () => {
   const storageServiceMock = {
     removeFile: jest.fn(),
     getFileNameWithoutUrl: jest.fn(),
+  }
+
+  const funkosNotificationsGatewayMock = {
+    sendMessage: jest.fn(),
   }
 
   beforeEach(async () => {
@@ -43,6 +52,10 @@ describe('FunkosService', () => {
           provide: FunkoMapper,
           useValue: funkoMapperMock,
         },
+        {
+          provide: FunkosNotificationsGateway,
+          useValue: funkosNotificationsGatewayMock,
+        },
         { provide: StorageService, useValue: storageServiceMock },
       ],
     }).compile()
@@ -53,6 +66,9 @@ describe('FunkosService', () => {
       getRepositoryToken(Category),
     )
     storageService = module.get<StorageService>(StorageService)
+    funkosNotificationsGateway = module.get<FunkosNotificationsGateway>(
+      FunkosNotificationsGateway,
+    )
   })
 
   it('debería estar definido', () => {
@@ -103,9 +119,7 @@ describe('FunkosService', () => {
 
     it('debería lanzar NotFoundException si no se encuentra el Funko con el ID', async () => {
       jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(null)
-      await expect(service.findOne(uuidv4())).rejects.toThrow(
-        NotFoundException,
-      )
+      await expect(service.findOne(uuidv4())).rejects.toThrow(NotFoundException)
     })
 
     it('debería lanzar BadRequestException si el ID no es válido', async () => {
@@ -267,12 +281,12 @@ describe('FunkosService', () => {
     it('debería lanzar NotFoundException si el Funko a actualizar no se encuentra', async () => {
       // Arrange
       jest.spyOn(service, 'findOne').mockResolvedValue(null)
-      var uuid = uuidv4()
+      const uuid = uuidv4()
 
       // Act & Assert
-      await expect(
-        service.update(uuid, {} as UpdateFunkoDto),
-      ).rejects.toThrow(NotFoundException)
+      await expect(service.update(uuid, {} as UpdateFunkoDto)).rejects.toThrow(
+        NotFoundException,
+      )
       expect(service.findOne).toHaveBeenCalledWith(uuid)
     })
 
@@ -444,9 +458,7 @@ describe('FunkosService', () => {
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockNewFunko)
 
-      jest
-          .spyOn(funkoRepository, 'save')
-          .mockResolvedValue(mockNewFunko)
+      jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockNewFunko)
 
       expect(
         await service.updateImage(
