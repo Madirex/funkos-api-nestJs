@@ -13,8 +13,8 @@ import { StorageService } from './storage.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { extname } from 'path'
-import { v4 as uuidv4 } from 'uuid'
 import { Request, Response } from 'express'
+import { Util } from '../util/util'
 
 /**
  * Controlador de Storage
@@ -35,24 +35,25 @@ export class StorageController {
    * @param req Petición
    */
   @UseInterceptors(
-      FileInterceptor('file', {
-        storage: diskStorage({
-          destination: process.env.UPLOADS_DIR || './storage-dir',
-          filename: (req, file, cb) => {
-            const fileName = uuidv4()
-            const fileExt = extname(file.originalname)
-            cb(null, `${fileName}${fileExt}`)
-          },
-        }),
-        // Validación de archivos
-        fileFilter: (req, file, cb) => {
-          if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-            cb(new BadRequestException('Fichero no soportado.'), false)
-          } else {
-            cb(null, true)
-          }
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: process.env.UPLOADS_DIR || './storage-dir',
+        filename: (req, file, cb) => {
+          const dateTime = Util.getCurrentDateTimeString()
+          const uuid = req.params.uuid
+          const fileExt = extname(file.originalname)
+          cb(null, `${uuid}-${dateTime}${fileExt}`)
         },
       }),
+      // Validación de archivos
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+          cb(new BadRequestException('Fichero no soportado.'), false)
+        } else {
+          cb(null, true)
+        }
+      },
+    }),
   )
   storeFile(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
     this.logger.log(`Subiendo archivo:  ${file}`)
@@ -62,10 +63,10 @@ export class StorageController {
     }
 
     const apiVersion = process.env.API_VERSION
-        ? `/${process.env.API_VERSION}`
-        : ''
+      ? `/${process.env.API_VERSION}`
+      : ''
     const url = `${req.protocol}://${req.get('host')}${apiVersion}/storage/${
-        file.filename
+      file.filename
     }`
     return {
       originalname: file.originalname,

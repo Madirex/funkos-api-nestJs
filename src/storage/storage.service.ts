@@ -1,7 +1,7 @@
-import {Injectable, Logger, NotFoundException} from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import * as fs from 'fs'
 import * as path from 'path'
-import {join} from 'path'
+import { join } from 'path'
 
 /**
  * Servicio de almacenamiento de ficheros
@@ -24,7 +24,7 @@ export class StorageService {
         })
       } else {
         this.logger.log(
-            `Creando directorio de subida de archivos en ${this.uploadsDir}`,
+          `Creando directorio de subida de archivos en ${this.uploadsDir}`,
         )
         fs.mkdirSync(this.uploadsDir)
       }
@@ -38,9 +38,9 @@ export class StorageService {
   findFile(filename: string): string {
     this.logger.log(`Buscando fichero ${filename}`)
     const file = join(
-        process.cwd(),
-        process.env.UPLOADS_DIR || './storage-dir',
-        filename,
+      process.cwd(),
+      process.env.UPLOADS_DIR || './storage-dir',
+      filename,
     )
     if (fs.existsSync(file)) {
       this.logger.log(`Fichero encontrado ${file}`)
@@ -73,9 +73,9 @@ export class StorageService {
   removeFile(filename: string): void {
     this.logger.log(`Eliminando fichero ${filename}`)
     const file = join(
-        process.cwd(),
-        process.env.UPLOADS_DIR || './storage-dir',
-        filename,
+      process.cwd(),
+      process.env.UPLOADS_DIR || './storage-dir',
+      filename,
     )
     if (fs.existsSync(file)) {
       fs.unlinkSync(file)

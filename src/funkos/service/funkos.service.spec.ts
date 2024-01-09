@@ -2,17 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { FunkosService } from './funkos.service'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Funko } from '../entities/funko.entity'
-import {
-  Category,
-  CategoryType,
-} from '../../categories/entities/category.entity'
+import { Category, CategoryType } from '../../categories/entities/category.entity'
 import { Repository } from 'typeorm'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { v4 as uuidv4 } from 'uuid'
 import { FunkoMapper } from '../mappers/funko.mapper'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
-import {StorageService} from "../../storage/storage.service";
+import { StorageService } from '../../storage/storage.service'
 
 describe('FunkosService', () => {
   let service: FunkosService
@@ -106,7 +103,7 @@ describe('FunkosService', () => {
 
     it('debería lanzar NotFoundException si no se encuentra el Funko con el ID', async () => {
       jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(null)
-      await expect(service.findOne('id-no-existente')).rejects.toThrow(
+      await expect(service.findOne(uuidv4())).rejects.toThrow(
         NotFoundException,
       )
     })
@@ -270,12 +267,13 @@ describe('FunkosService', () => {
     it('debería lanzar NotFoundException si el Funko a actualizar no se encuentra', async () => {
       // Arrange
       jest.spyOn(service, 'findOne').mockResolvedValue(null)
+      var uuid = uuidv4()
 
       // Act & Assert
       await expect(
-        service.update('id-no-existente', {} as UpdateFunkoDto),
+        service.update(uuid, {} as UpdateFunkoDto),
       ).rejects.toThrow(NotFoundException)
-      expect(service.findOne).toHaveBeenCalledWith('id-no-existente')
+      expect(service.findOne).toHaveBeenCalledWith(uuid)
     })
 
     it('debería lanzar BadRequestException si el nombre del Funko a actualizar ya existe para otro Funko', async () => {
@@ -436,13 +434,13 @@ describe('FunkosService', () => {
         get: () => 'localhost',
       }
       const mockFile = {
-        filename: 'new_image',
+        filename: 'new_image.png',
       }
 
       const mockNewFunko = new Funko()
 
       const mockResponseFunko = new Funko()
-      mockResponseFunko.image = 'http://localhost/storage/new_image';
+      mockResponseFunko.image = 'http://localhost/storage/new_image.png'
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockNewFunko)
 
@@ -451,7 +449,12 @@ describe('FunkosService', () => {
           .mockResolvedValue(mockNewFunko)
 
       expect(
-          await service.updateImage(uuidv4(), mockFile as any, mockRequest as any, true),
+        await service.updateImage(
+          uuidv4(),
+          mockFile as any,
+          mockRequest as any,
+          true,
+        ),
       ).toEqual(mockResponseFunko)
 
       expect(storageService.removeFile).toHaveBeenCalled()

@@ -1,13 +1,19 @@
-import {BadRequestException, Injectable, Logger, NotFoundException, Param} from '@nestjs/common'
-import {CreateFunkoDto} from '../dto/create-funko.dto'
-import {UpdateFunkoDto} from '../dto/update-funko.dto'
-import {FunkoMapper} from '../mappers/funko.mapper'
-import {Funko} from '../entities/funko.entity'
-import {InjectRepository} from '@nestjs/typeorm'
-import {Category} from '../../categories/entities/category.entity'
-import {Repository} from 'typeorm'
-import {isUUID} from 'class-validator'
-import {StorageService} from "../../storage/storage.service";
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  Param,
+} from '@nestjs/common'
+import { CreateFunkoDto } from '../dto/create-funko.dto'
+import { UpdateFunkoDto } from '../dto/update-funko.dto'
+import { FunkoMapper } from '../mappers/funko.mapper'
+import { Funko } from '../entities/funko.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Category } from '../../categories/entities/category.entity'
+import { Repository } from 'typeorm'
+import { isUUID } from 'class-validator'
+import { StorageService } from '../../storage/storage.service'
 import { Request } from 'express'
 
 /**
@@ -91,7 +97,7 @@ export class FunkosService {
       category = await this.getCategoryByName(createFunkoDto.category)
     }
     const funko = this.funkoMapper.toEntity(createFunkoDto, category)
-    if (funko.category == null){
+    if (funko.category == null) {
       delete funko.category
     }
     return await this.funkoRepository.save({
@@ -160,11 +166,11 @@ export class FunkosService {
       category,
     )
 
-    if (funkoToUpdate.category != null){
+    if (funkoToUpdate.category != null) {
       delete funkoToUpdate.category
     }
 
-    if (funko.category != null){
+    if (funko.category != null) {
       delete funko.category
     }
 
@@ -230,10 +236,10 @@ export class FunkosService {
    * @param withUrl Indica si se debe generar la URL
    */
   public async updateImage(
-      id: string,
-      file: Express.Multer.File,
-      req: Request,
-      withUrl: boolean = true,
+    id: string,
+    file: Express.Multer.File,
+    req: Request,
+    withUrl: boolean = true,
   ) {
     this.logger.log(`Actualizando imagen Funko por id: ${id}`)
     const funkoToUpdate = await this.findOne(id)
@@ -243,7 +249,7 @@ export class FunkosService {
       let imagePath = funkoToUpdate.image
       if (withUrl) {
         imagePath = this.storageService.getFileNameWithoutUrl(
-            funkoToUpdate.image,
+          funkoToUpdate.image,
         )
       }
       try {
@@ -262,10 +268,10 @@ export class FunkosService {
     if (withUrl) {
       this.logger.log(`Generando url para ${file.filename}`)
       const apiVersion = process.env.API_VERSION
-          ? `/${process.env.API_VERSION}`
-          : ''
+        ? `/${process.env.API_VERSION}`
+        : ''
       filePath = `${req.protocol}://${req.get('host')}${apiVersion}/storage/${
-          file.filename
+        file.filename
       }`
     } else {
       filePath = file.filename
