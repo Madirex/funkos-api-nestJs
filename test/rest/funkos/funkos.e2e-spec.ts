@@ -30,6 +30,8 @@ describe('FunkosController (e2e)', () => {
         create: jest.fn(),
         update: jest.fn(),
         remove: jest.fn(),
+        exists: jest.fn(),
+        updateImage: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -147,4 +149,20 @@ describe('FunkosController (e2e)', () => {
                 .expect(400);
         });
     });
+
+    describe('PATCH /funkos/image/:id', () => {
+        it('debería actualizar la imagen de Funko', async () => {
+
+            const file = Buffer.from('file')
+
+            mockFunkosService.exists.mockResolvedValue(true)
+            mockFunkosService.updateImage.mockResolvedValue(testFunko)
+
+            await request(app.getHttpServer())
+                .patch(`${endpoint}/image/${testFunko.id}`)
+                .attach('file', file, 'image.jpg')
+                .set('Content-Type', 'multipart/form-data')
+                .expect(200)
+        })
+    })
 });

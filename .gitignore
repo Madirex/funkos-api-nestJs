@@ -1,4 +1,5 @@
 # compiled output
+/storage-dir/*
 /dist
 /node_modules
 

@@ -19,7 +19,7 @@ import {CreateFunkoDto} from '../dto/create-funko.dto'
 import {UpdateFunkoDto} from '../dto/update-funko.dto'
 import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
-import {parse} from "ts-jest";
+import * as path from "path";
 import {extname} from "path";
 import {Request} from 'express'
 
@@ -121,34 +121,12 @@ export class FunkosController {
             storage: diskStorage({
                 destination: process.env.UPLOADS_DIR || './storage-dir',
                 filename: (req, file, cb) => {
-                    const {name} = parse(file.originalname)
+                    const {name} = path.parse(file.originalname)
                     const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
                     const fileExt = extname(file.originalname)
                     cb(null, `${fileName}${fileExt}`)
                 },
             }),
-            // Validación de archivos
-            fileFilter: (req, file, cb) => {
-                const allowedMimes = ['image/jpeg', 'image/png', 'image/gif']
-                const maxFileSizeInBytes = 1024 * 1024 * 6 // 6 megabytes
-                if (!allowedMimes.includes(file.mimetype)) {
-                    cb(
-                        new BadRequestException(
-                            'Fichero no soportado. No es del tipo imagen válido',
-                        ),
-                        false,
-                    )
-                } else if (file.size > maxFileSizeInBytes) {
-                    cb(
-                        new BadRequestException(
-                            'El tamaño del archivo no puede ser mayor a ' + maxFileSizeInBytes + ' bytes.',
-                        ),
-                        false,
-                    )
-                } else {
-                    cb(null, true)
-                }
-            },
         }),
     )
     async updateImage(
@@ -158,6 +136,17 @@ export class FunkosController {
     ) {
         this.logger.log(`Actualizando imagen al Funko con id ${id}:  ${file}`)
 
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/gif']
+        const maxFileSizeInBytes = 1024 * 1024 // 1 megabyte
+        if (!allowedMimes.includes(file.mimetype)) {
+            throw new BadRequestException(
+                'Fichero no soportado. No es del tipo imagen válido',
+            )
+        } else if (file.size > maxFileSizeInBytes) {
+            throw new BadRequestException(
+                'El tamaño del archivo no puede ser mayor a ' + maxFileSizeInBytes + ' bytes.',
+            )
+        }
         return await this.funkosService.updateImage(id, file, req, true)
     }
 }
