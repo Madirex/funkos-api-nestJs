@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { plainToClass } from 'class-transformer'
 import { Category } from '../../categories/entities/category.entity'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
+import { ResponseFunkoDto } from '../dto/response-funko.dto'
 
 /**
  * Mapper de Funkos
@@ -52,5 +53,13 @@ export class FunkoMapper {
     funko.category = category || entity.category
     funko.isActive = entity.isActive
     return funko
+  }
+
+  /**
+   * Mapea una entidad de Funko a un DTO de respuesta
+   * @param entity Entidad de Funko
+   */
+  mapEntityToResponseDto(entity: Funko): ResponseFunkoDto {
+    return plainToClass(ResponseFunkoDto, entity)
   }
 }
