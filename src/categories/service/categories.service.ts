@@ -10,6 +10,12 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Category } from '../entities/category.entity'
 import { Repository } from 'typeorm'
 import { CategoriesMapper } from '../mappers/categories.mapper'
+import {
+  NotificationType,
+  WsNotification,
+} from '../../websockets/notifications/notification.model'
+import { ResponseCategoryDto } from '../dto/response-category.dto'
+import { CategoriesNotificationsGateway } from '../../websockets/notifications/categories-notifications.gateway'
 
 /**
  * Servicio de categorías
@@ -22,11 +28,13 @@ export class CategoriesService {
    * Constructor
    * @param categoriesRepository Repositorio de categorías
    * @param categoriesMapper Mapper de categorías
+   * @param categoriesNotificationsGateway Gateway de notificaciones de categorías
    */
   constructor(
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
     private readonly categoriesMapper: CategoriesMapper,
+    private readonly categoriesNotificationsGateway: CategoriesNotificationsGateway,
   ) {}
 
   /**
@@ -85,6 +93,9 @@ export class CategoriesService {
     const categoryResponse = await this.categoriesRepository.save({
       ...category,
     })
+
+    this.onChange(NotificationType.CREATE, categoryResponse)
+
     return this.categoriesMapper.mapEntityToResponseDto(categoryResponse)
   }
 
@@ -135,6 +146,9 @@ export class CategoriesService {
       ...categoryToUpdate,
       ...category,
     })
+
+    this.onChange(NotificationType.UPDATE, categoryResponse)
+
     return this.categoriesMapper.mapEntityToResponseDto(categoryResponse)
   }
 
@@ -154,6 +168,9 @@ export class CategoriesService {
       ...categoryToRemove,
       isActive: false,
     })
+
+    this.onChange(NotificationType.DELETE, category)
+
     return this.categoriesMapper.mapEntityToResponseDto(category)
   }
 
@@ -171,5 +188,21 @@ export class CategoriesService {
       })
       .getOne()
     return this.categoriesMapper.mapEntityToResponseDto(category)
+  }
+
+  /**
+   * @description Método que envía una notificación a los clientes conectados
+   * @param type Tipo de notificación
+   * @param data Datos de la notificación
+   * @private Método privado
+   */
+  private onChange(type: NotificationType, data: ResponseCategoryDto) {
+    const notification = new WsNotification<ResponseCategoryDto>(
+      'Categories',
+      type,
+      data,
+      new Date(),
+    )
+    this.categoriesNotificationsGateway.sendMessage(notification)
   }
 }

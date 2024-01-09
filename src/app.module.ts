@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common'
 import { FunkosModule } from './funkos/funkos.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CategoriesModule } from './categories/categories.module'
-import { StorageModule } from './storage/storage.module';
+import { StorageModule } from './storage/storage.module'
+import { NotificationsModule } from './websockets/notifications/notifications.module'
+import { FunkosNotificationsGateway } from './websockets/notifications/funkos-notifications.gateway'
+import { CategoriesNotificationsGateway } from './websockets/notifications/categories-notifications.gateway'
 
 /**
  * Módulo principal de la aplicación
@@ -22,9 +25,10 @@ import { StorageModule } from './storage/storage.module';
       synchronize: true,
     }),
     StorageModule,
+    NotificationsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [FunkosNotificationsGateway, CategoriesNotificationsGateway],
 })
 
 /**

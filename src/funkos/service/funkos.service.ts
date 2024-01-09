@@ -15,6 +15,12 @@ import { Repository } from 'typeorm'
 import { isUUID } from 'class-validator'
 import { StorageService } from '../../storage/storage.service'
 import { Request } from 'express'
+import { FunkosNotificationsGateway } from '../../websockets/notifications/funkos-notifications.gateway'
+import {
+  NotificationType,
+  WsNotification,
+} from '../../websockets/notifications/notification.model'
+import { ResponseFunkoDto } from '../dto/response-funko.dto'
 
 /**
  * Servicio de Funkos
@@ -29,6 +35,7 @@ export class FunkosService {
    * @param categoryRepository Repositorio de categorías
    * @param funkoMapper Mapper de Funkos
    * @param storageService Servicio de Storage
+   * @param funkosNotificationsGateway Gateway de notificaciones de Funkos
    */
   constructor(
     @InjectRepository(Funko)
@@ -37,6 +44,7 @@ export class FunkosService {
     private readonly categoryRepository: Repository<Category>,
     private readonly funkoMapper: FunkoMapper,
     private readonly storageService: StorageService,
+    private readonly funkosNotificationsGateway: FunkosNotificationsGateway,
   ) {}
 
   /**
@@ -100,6 +108,9 @@ export class FunkosService {
     if (funko.category == null) {
       delete funko.category
     }
+
+    const dto = this.funkoMapper.mapEntityToResponseDto(funko)
+    this.onChange(NotificationType.CREATE, dto)
     return await this.funkoRepository.save({
       ...funko,
     })
@@ -174,6 +185,10 @@ export class FunkosService {
       delete funko.category
     }
 
+    const dto = this.funkoMapper.mapEntityToResponseDto(funko)
+
+    this.onChange(NotificationType.UPDATE, dto)
+
     return await this.funkoRepository.save({
       ...funkoToUpdate,
       ...funko,
@@ -192,6 +207,11 @@ export class FunkosService {
       throw new BadRequestException('ID no válido')
     }
     const funkoToRemove = await this.findOne(id)
+
+    const dto = this.funkoMapper.mapEntityToResponseDto(funkoToRemove)
+
+    this.onChange(NotificationType.DELETE, dto)
+
     return await this.funkoRepository.save({
       ...funkoToRemove,
       isActive: false,
@@ -278,6 +298,27 @@ export class FunkosService {
     }
 
     funkoToUpdate.image = filePath
+
+    const dto = this.funkoMapper.mapEntityToResponseDto(funkoToUpdate)
+
+    this.onChange(NotificationType.UPDATE, dto)
+
     return await this.funkoRepository.save(funkoToUpdate)
+  }
+
+  /**
+   * @description Método que envía una notificación a los clientes conectados
+   * @param type Tipo de notificación
+   * @param data Datos de la notificación
+   * @private Método privado
+   */
+  private onChange(type: NotificationType, data: ResponseFunkoDto) {
+    const notification = new WsNotification<ResponseFunkoDto>(
+      'Funkos',
+      type,
+      data,
+      new Date(),
+    )
+    this.funkosNotificationsGateway.sendMessage(notification)
   }
 }
