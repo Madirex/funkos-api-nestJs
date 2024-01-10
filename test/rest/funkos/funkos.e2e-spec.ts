@@ -44,7 +44,7 @@ describe('FunkosController (e2e)', () => {
     get: jest.fn(() => Promise.resolve()),
     set: jest.fn(() => Promise.resolve()),
     store: {
-      keys: jest.fn(),
+      keys: jest.fn(() => []),
     },
   }
 

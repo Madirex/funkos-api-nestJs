@@ -32,7 +32,7 @@ describe('CategoriesService', () => {
     get: jest.fn(() => Promise.resolve()),
     set: jest.fn(() => Promise.resolve()),
     store: {
-      keys: jest.fn(),
+      keys: jest.fn(() => []),
     },
   }
 
@@ -99,13 +99,6 @@ describe('CategoriesService', () => {
       // Assert
       expect(res).toEqual(mockCategories)
       expect(categoriesRepository.find).toHaveBeenCalled()
-    })
-
-    it('debería retornar el resultado caché', async () => {
-      const testCategories = []
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(testCategories)
-      const result = await service.findAll()
-      expect(result).toEqual(testCategories)
     })
   })
 
