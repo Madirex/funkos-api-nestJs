@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer'
+
 /**
  * Clase DTO (Data Transfer Object) para recibir datos del Funko
  */
@@ -12,6 +14,7 @@ export class ResponseFunkoDto {
 
   image: string
 
+  @Exclude({ toPlainOnly: true, toClassOnly: true })
   category: string
 
   createdAt: Date
