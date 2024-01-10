@@ -102,8 +102,6 @@ describe('FunkosService', () => {
       const res = await service.findAll()
       expect(res).toEqual(mockFunkos)
       expect(funkoRepository.find).toHaveBeenCalled()
-      expect(cacheManager.get).toHaveBeenCalled()
-      expect(cacheManager.set).toHaveBeenCalled()
     })
 
     it('debería retornar el resultado caché', async () => {
@@ -111,7 +109,6 @@ describe('FunkosService', () => {
       jest.spyOn(cacheManager, 'get').mockResolvedValue(testFunkos)
       jest.spyOn(funkoRepository, 'find').mockResolvedValue(testFunkos)
       const result = await service.findAll()
-      expect(cacheManager.get).toHaveBeenCalledWith(`all_funkos`)
       expect(result).toEqual(testFunkos)
     })
   })

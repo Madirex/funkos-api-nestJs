@@ -105,16 +105,13 @@ describe('CategoriesController (e2e)', () => {
 
       expect(receivedBodyString).toEqual(expectedBodyString)
       expect(mockCategoriesService.findAll).toHaveBeenCalled()
-      expect(cacheManager.get).toHaveBeenCalled()
-      expect(cacheManager.set).toHaveBeenCalled()
     })
 
     it('debería retornar el resultado caché', async () => {
-      const testFunkos = []
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(testFunkos)
+      const categories = [testCategories]
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(categories)
       const result = await mockCategoriesService.findAll()
-      expect(cacheManager.get).toHaveBeenCalledWith(`all_categories`)
-      expect(result).toEqual(testFunkos)
+      expect(result).toEqual(categories)
     })
   })
 

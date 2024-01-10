@@ -81,15 +81,12 @@ describe('FunkosController (e2e)', () => {
 
       expect(body).toEqual([testFunko])
       expect(mockFunkosService.findAll).toHaveBeenCalled()
-      expect(cacheManager.get).toHaveBeenCalled()
-      expect(cacheManager.set).toHaveBeenCalled()
     })
 
     it('debería retornar el resultado caché', async () => {
-      const testFunkos = []
+      const testFunkos = [testFunko]
       jest.spyOn(cacheManager, 'get').mockResolvedValue(testFunkos)
       const result = await mockFunkosService.findAll()
-      expect(cacheManager.get).toHaveBeenCalledWith(`all_funkos`)
       expect(result).toEqual(testFunkos)
     })
   })

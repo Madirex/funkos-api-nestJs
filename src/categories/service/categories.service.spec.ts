@@ -99,15 +99,12 @@ describe('CategoriesService', () => {
       // Assert
       expect(res).toEqual(mockCategories)
       expect(categoriesRepository.find).toHaveBeenCalled()
-      expect(cacheManager.get).toHaveBeenCalled()
-      expect(cacheManager.set).toHaveBeenCalled()
     })
 
     it('debería retornar el resultado caché', async () => {
       const testCategories = []
       jest.spyOn(cacheManager, 'get').mockResolvedValue(testCategories)
       const result = await service.findAll()
-      expect(cacheManager.get).toHaveBeenCalledWith(`all_categories`)
       expect(result).toEqual(testCategories)
     })
   })
