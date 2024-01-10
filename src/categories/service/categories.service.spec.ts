@@ -103,7 +103,13 @@ describe('CategoriesService', () => {
       expect(cacheManager.set).toHaveBeenCalled()
     })
 
-    //TODO: MODIFY ESTO TAMBIÉN
+    it('debería retornar el resultado caché', async () => {
+      const testCategories = []
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(testCategories)
+      const result = await service.findAll()
+      expect(cacheManager.get).toHaveBeenCalledWith(`all_categories`)
+      expect(result).toEqual(testCategories)
+    })
   })
 
   describe('findOne', () => {
