@@ -39,6 +39,7 @@ export class FunkosService {
    * @param funkoMapper Mapper de Funkos
    * @param storageService Servicio de Storage
    * @param funkosNotificationsGateway Gateway de notificaciones de Funkos
+   * @param cacheManager Gestor de caché
    */
   constructor(
     @InjectRepository(Funko)

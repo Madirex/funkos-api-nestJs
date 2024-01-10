@@ -110,11 +110,11 @@ describe('CategoriesController (e2e)', () => {
     })
 
     it('debería retornar el resultado caché', async () => {
-      const testCategories = []
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(testCategories)
+      const testFunkos = []
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(testFunkos)
       const result = await mockCategoriesService.findAll()
       expect(cacheManager.get).toHaveBeenCalledWith(`all_categories`)
-      expect(result).toEqual(testCategories)
+      expect(result).toEqual(testFunkos)
     })
   })
 
