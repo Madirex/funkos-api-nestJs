@@ -66,9 +66,13 @@ export class FunkosService {
       return cache
     }
 
-    const res = this.funkoRepository.find({
+    const funkos = await this.funkoRepository.find({
       relations: ['category'],
     })
+
+    const res = funkos.map((funko) =>
+      this.funkoMapper.mapEntityToResponseDto(funko),
+    )
 
     // Se guarda en caché
     await this.cacheManager.set(`all_funkos`, res, 60)
@@ -81,11 +85,11 @@ export class FunkosService {
    * @param id Identificador del Funko
    * @returns Funko encontrado
    */
-  async findOne(@Param('id') id: string): Promise<Funko> {
+  async findOne(@Param('id') id: string): Promise<ResponseFunkoDto> {
     this.logger.log(`Obteniendo Funko por id: ${id}`)
 
     // Caché
-    const cache: Funko = await this.cacheManager.get(`funko_${id}`)
+    const cache: ResponseFunkoDto = await this.cacheManager.get(`funko_${id}`)
     if (cache) {
       console.log('Cache hit')
       this.logger.log('Cache hit')
@@ -96,14 +100,16 @@ export class FunkosService {
     if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
-    const res = await this.funkoRepository.findOne({
+    const funko = await this.funkoRepository.findOne({
       where: { id },
       relations: ['category'],
     })
 
-    if (!res) {
+    if (!funko) {
       throw new NotFoundException(`Funko con ID: ${id} no encontrado`)
     }
+
+    const res = this.funkoMapper.mapEntityToResponseDto(funko)
 
     // Se guarda en caché
     await this.cacheManager.set(`funko_${id}`, res, 60)
@@ -116,7 +122,7 @@ export class FunkosService {
    * @param createFunkoDto DTO de creación de Funko
    * @returns Funko creado
    */
-  async create(createFunkoDto: CreateFunkoDto): Promise<Funko> {
+  async create(createFunkoDto: CreateFunkoDto): Promise<ResponseFunkoDto> {
     this.logger.log(
       `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
     )
@@ -143,12 +149,14 @@ export class FunkosService {
     const dto = this.funkoMapper.mapEntityToResponseDto(funko)
     this.onChange(NotificationType.CREATE, dto)
 
+    const res = await this.funkoRepository.save({
+      ...funko,
+    })
+
     // caché
     await this.invalidateCacheKey('all_funkos')
 
-    return await this.funkoRepository.save({
-      ...funko,
-    })
+    return this.funkoMapper.mapEntityToResponseDto(res)
   }
 
   /**
@@ -168,10 +176,10 @@ export class FunkosService {
       name: string
       id: string
       stock: number
-      category: Category
+      category: string
       isActive: boolean
       updatedAt: Date
-    } & Funko
+    } & ResponseFunkoDto
   > {
     this.logger.log(
       `Actualizando Funko con datos: ${JSON.stringify(updateFunkoDto)}`,
@@ -183,7 +191,11 @@ export class FunkosService {
       throw new BadRequestException('ID no válido')
     }
 
-    const funkoToUpdate = await this.findOne(id)
+    await this.findOne(id)
+    const funkoToUpdate = await this.funkoRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    })
 
     if (!funkoToUpdate) {
       throw new NotFoundException(`Funko con ID: ${id} no encontrado`)
@@ -224,14 +236,16 @@ export class FunkosService {
 
     this.onChange(NotificationType.UPDATE, dto)
 
+    const res = await this.funkoRepository.save({
+      ...funkoToUpdate,
+      ...funko,
+    })
+
     // invalidar caché
     await this.invalidateCacheKey(`funko_${id}`)
     await this.invalidateCacheKey('all_funkos')
 
-    return await this.funkoRepository.save({
-      ...funkoToUpdate,
-      ...funko,
-    })
+    return this.funkoMapper.mapEntityToResponseDto(res)
   }
 
   /**
@@ -239,26 +253,32 @@ export class FunkosService {
    * @param id Identificador del Funko
    * @returns Funko eliminado
    */
-  async remove(@Param('id') id: string): Promise<Funko> {
+  async remove(@Param('id') id: string): Promise<ResponseFunkoDto> {
     this.logger.log(`Eliminando Funko con id: ${id}`)
     const isNumeric = !isNaN(Number(id))
     if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
-    const funkoToRemove = await this.findOne(id)
+    await this.findOne(id)
+    const funkoToRemove = await this.funkoRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    })
 
     const dto = this.funkoMapper.mapEntityToResponseDto(funkoToRemove)
 
     this.onChange(NotificationType.DELETE, dto)
 
+    const res = await this.funkoRepository.save({
+      ...funkoToRemove,
+      isActive: false,
+    })
+
     // invalidar caché
     await this.invalidateCacheKey(`funko_${id}`)
     await this.invalidateCacheKey('all_funkos')
 
-    return await this.funkoRepository.save({
-      ...funkoToRemove,
-      isActive: false,
-    })
+    return this.funkoMapper.mapEntityToResponseDto(res)
   }
 
   /**
@@ -268,12 +288,13 @@ export class FunkosService {
    * @returns Funko encontrado
    */
   async getByName(name: string) {
-    return await this.funkoRepository
+    const funkoOp = await this.funkoRepository
       .createQueryBuilder()
       .where('LOWER(name) = LOWER(:name)', {
         name: name.toLowerCase(),
       })
       .getOne()
+    return this.funkoMapper.mapEntityToResponseDto(funkoOp)
   }
 
   /**
@@ -305,7 +326,11 @@ export class FunkosService {
     withUrl: boolean = true,
   ) {
     this.logger.log(`Actualizando imagen Funko por id: ${id}`)
-    const funkoToUpdate = await this.findOne(id)
+    await this.findOne(id)
+    const funkoToUpdate = await this.funkoRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    })
 
     if (funkoToUpdate.image !== Funko.IMAGE_DEFAULT) {
       this.logger.log(`Borrando imagen ${funkoToUpdate.image}`)
@@ -346,11 +371,13 @@ export class FunkosService {
 
     this.onChange(NotificationType.UPDATE, dto)
 
+    const res = await this.funkoRepository.save(funkoToUpdate)
+
     // invalidar caché
     await this.invalidateCacheKey(`funko_${id}`)
     await this.invalidateCacheKey('all_funkos')
 
-    return await this.funkoRepository.save(funkoToUpdate)
+    return this.funkoMapper.mapEntityToResponseDto(res)
   }
 
   /**

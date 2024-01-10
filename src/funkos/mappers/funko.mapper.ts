@@ -60,6 +60,10 @@ export class FunkoMapper {
    * @param entity Entidad de Funko
    */
   mapEntityToResponseDto(entity: Funko): ResponseFunkoDto {
-    return plainToClass(ResponseFunkoDto, entity)
+    const responseFunkoDto = plainToClass(ResponseFunkoDto, entity)
+    if (entity && entity.category && 'name' in entity.category) {
+      responseFunkoDto.category = entity.category.name
+    }
+    return responseFunkoDto
   }
 }
