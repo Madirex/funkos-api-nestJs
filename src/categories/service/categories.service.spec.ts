@@ -254,12 +254,15 @@ describe('CategoriesService', () => {
       jest
         .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
         .mockReturnValue(mockCategoryResponse)
+      jest
+        .spyOn(categoriesRepository, 'findOneBy')
+        .mockResolvedValue(existingCategory)
 
       // Act
       const res = await service.update(id, updateCategoryDto)
 
       // Assert
-      expect(res).toEqual(existingCategory)
+      expect(res).toEqual(mockCategoryResponse)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(service.getByName).toHaveBeenCalledWith(
         updateCategoryDto.name.trim(),

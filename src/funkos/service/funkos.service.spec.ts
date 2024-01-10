@@ -14,6 +14,7 @@ import { FunkoMapper } from '../mappers/funko.mapper'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { StorageService } from '../../storage/storage.service'
 import { FunkosNotificationsGateway } from '../../websockets/notifications/funkos-notifications.gateway'
+import { ResponseFunkoDto } from '../dto/response-funko.dto'
 
 describe('FunkosService', () => {
   let service: FunkosService
@@ -25,6 +26,7 @@ describe('FunkosService', () => {
   const funkoMapperMock = {
     toEntity: jest.fn(),
     mapUpdateToEntity: jest.fn(),
+    mapEntityToResponseDto: jest.fn(),
   }
 
   const storageServiceMock = {
@@ -453,12 +455,17 @@ describe('FunkosService', () => {
 
       const mockNewFunko = new Funko()
 
-      const mockResponseFunko = new Funko()
-      mockResponseFunko.image = 'http://localhost/storage/new_image.png'
+      const mockResponseFunkoResponse = new ResponseFunkoDto()
+
+      mockNewFunko.image = 'http://localhost/storage/new_image.png'
+      mockResponseFunkoResponse.image = 'http://localhost/storage/new_image.png'
 
       jest.spyOn(service, 'findOne').mockResolvedValue(mockNewFunko)
 
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockNewFunko)
+      jest
+        .spyOn(funkoMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockResponseFunkoResponse)
 
       expect(
         await service.updateImage(
@@ -467,7 +474,7 @@ describe('FunkosService', () => {
           mockRequest as any,
           true,
         ),
-      ).toEqual(mockResponseFunko)
+      ).toEqual(mockResponseFunkoResponse)
 
       expect(storageService.removeFile).toHaveBeenCalled()
       expect(storageService.getFileNameWithoutUrl).toHaveBeenCalled()
