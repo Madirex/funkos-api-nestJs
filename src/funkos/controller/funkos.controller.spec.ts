@@ -4,11 +4,10 @@ import { FunkosController } from './funkos.controller'
 import { FunkosService } from '../service/funkos.service'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
-import { Funko } from '../entities/funko.entity'
-import { CategoryType } from '../../categories/entities/category.entity'
 import { v4 as uuidv4 } from 'uuid'
 import { Request } from 'express'
 import { CacheModule } from '@nestjs/cache-manager'
+import { ResponseFunkoDto } from '../dto/response-funko.dto'
 
 describe('FunkosController', () => {
   let controller: FunkosController
@@ -41,22 +40,14 @@ describe('FunkosController', () => {
   describe('findAll', () => {
     const date = new Date()
     it('debería retornar todos los Funkos', async () => {
-      const testFunkos: Funko[] = [
+      const testFunkos: ResponseFunkoDto[] = [
         {
           id: '1',
           name: 'Funko1',
           price: 100,
           stock: 10,
           image: 'test',
-          category: {
-            id: 1,
-            name: 'test',
-            categoryType: CategoryType.OTHER,
-            createdAt: date,
-            updatedAt: date,
-            isActive: true,
-            funkos: [],
-          },
+          category: 'test',
           createdAt: date,
           updatedAt: date,
           isActive: true,
@@ -74,21 +65,13 @@ describe('FunkosController', () => {
     const date = new Date()
     it('debería de recibir el Funko dado el ID', async () => {
       const id = uuidv4()
-      const mockResult: Funko = {
+      const mockResult: ResponseFunkoDto = {
         id: id,
         name: 'Funko1',
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -104,15 +87,7 @@ describe('FunkosController', () => {
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -131,21 +106,13 @@ describe('FunkosController', () => {
     it('debería de crear un  Funko', async () => {
       const id = uuidv4()
       const dto: CreateFunkoDto = { name: 'Funko1' }
-      const mockResult: Funko = {
+      const mockResult: ResponseFunkoDto = {
         id: id,
         name: 'Funko1',
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -161,15 +128,7 @@ describe('FunkosController', () => {
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -182,21 +141,13 @@ describe('FunkosController', () => {
     it('debería de actualizar el Funko', async () => {
       const id = uuidv4()
       const dto: UpdateFunkoDto = { name: 'UpdatedFunko' }
-      const mockResult: Funko = {
+      const mockResult: ResponseFunkoDto = {
         id: id,
         name: 'UpdatedFunko',
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -212,15 +163,7 @@ describe('FunkosController', () => {
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -241,21 +184,13 @@ describe('FunkosController', () => {
     const date = new Date()
     it('debería eliminar un Funko', async () => {
       const id = uuidv4()
-      const mockResult: Funko = {
+      const mockResult: ResponseFunkoDto = {
         id: id,
         name: 'Funko1',
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -271,15 +206,7 @@ describe('FunkosController', () => {
         price: 100,
         stock: 10,
         image: 'test',
-        category: {
-          id: 1,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: date,
-          updatedAt: date,
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: date,
         updatedAt: date,
         isActive: true,
@@ -301,7 +228,7 @@ describe('FunkosController', () => {
         mimetype: 'image/png',
       } as Express.Multer.File
       const mockReq = {} as Request
-      const mockResult: Funko = new Funko()
+      const mockResult: ResponseFunkoDto = new ResponseFunkoDto()
 
       jest.spyOn(service, 'updateImage').mockResolvedValue(mockResult)
 
@@ -312,7 +239,7 @@ describe('FunkosController', () => {
         mockReq,
         true,
       )
-      expect(mockResult).toBeInstanceOf(Funko)
+      expect(mockResult).toBeInstanceOf(ResponseFunkoDto)
     })
   })
 })
