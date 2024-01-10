@@ -1,22 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   Logger,
+  Param,
+  Post,
+  Put,
+  UseInterceptors,
 } from '@nestjs/common'
 import { CategoriesService } from '../service/categories.service'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 /**
  * Controlador de categorías
  */
 @Controller('categories')
+@UseInterceptors(CacheInterceptor)
 export class CategoriesController {
   private readonly logger = new Logger(CategoriesController.name)
 
@@ -32,6 +35,8 @@ export class CategoriesController {
    * @example http://localhost:3000/v1/categories
    */
   @Get()
+  @CacheKey('all_categories')
+  @CacheTTL(30)
   @HttpCode(200)
   async findAll() {
     this.logger.log('Obteniendo todas las categorías')

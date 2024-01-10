@@ -22,11 +22,13 @@ import { diskStorage } from 'multer'
 import { extname } from 'path'
 import { Request } from 'express'
 import { Util } from '../../util/util'
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 
 /**
  * Controlador de Funkos
  */
 @Controller('funkos')
+@UseInterceptors(CacheInterceptor)
 export class FunkosController {
   private readonly logger = new Logger(FunkosController.name)
 
@@ -42,6 +44,8 @@ export class FunkosController {
    * @example http://localhost:3000/v1/funkos
    */
   @Get()
+  @CacheKey('all_funkos')
+  @CacheTTL(30)
   @HttpCode(200)
   async findAll() {
     this.logger.log('Obteniendo todos los Funkos')

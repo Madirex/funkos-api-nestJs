@@ -6,6 +6,7 @@ import { StorageModule } from './storage/storage.module'
 import { NotificationsModule } from './websockets/notifications/notifications.module'
 import { FunkosNotificationsGateway } from './websockets/notifications/funkos-notifications.gateway'
 import { CategoriesNotificationsGateway } from './websockets/notifications/categories-notifications.gateway'
+import { CacheModule } from '@nestjs/cache-manager'
 
 /**
  * Módulo principal de la aplicación
@@ -26,6 +27,7 @@ import { CategoriesNotificationsGateway } from './websockets/notifications/categ
     }),
     StorageModule,
     NotificationsModule,
+    CacheModule.register(),
   ],
   controllers: [],
   providers: [FunkosNotificationsGateway, CategoriesNotificationsGateway],

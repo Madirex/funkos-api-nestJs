@@ -5,7 +5,7 @@ import { CategoriesService } from '../service/categories.service'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { Category, CategoryType } from '../entities/category.entity'
-import { ResponseCategoryDto } from '../dto/response-category.dto'
+import { CacheModule } from '@nestjs/cache-manager'
 
 describe('CategoriesController', () => {
   let controller: CategoriesController
@@ -21,6 +21,7 @@ describe('CategoriesController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [CategoriesController],
       providers: [
         { provide: CategoriesService, useValue: categoriesServiceMock },
@@ -50,9 +51,8 @@ describe('CategoriesController', () => {
       ]
 
       jest.spyOn(service, 'findAll').mockResolvedValue(testCategories)
-      const result: ResponseCategoryDto[] = await controller.findAll()
 
-      expect(result).toEqual(testCategories)
+      expect(await controller.findAll()).toEqual(testCategories)
       expect(service.findAll).toHaveBeenCalled()
     })
   })

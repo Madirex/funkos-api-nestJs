@@ -8,6 +8,7 @@ import { Funko } from '../entities/funko.entity'
 import { CategoryType } from '../../categories/entities/category.entity'
 import { v4 as uuidv4 } from 'uuid'
 import { Request } from 'express'
+import { CacheModule } from '@nestjs/cache-manager'
 
 describe('FunkosController', () => {
   let controller: FunkosController
@@ -24,6 +25,7 @@ describe('FunkosController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [FunkosController],
       providers: [{ provide: FunkosService, useValue: funkosServiceMock }],
     }).compile()
@@ -62,9 +64,8 @@ describe('FunkosController', () => {
       ]
 
       jest.spyOn(service, 'findAll').mockResolvedValue(testFunkos)
-      const result: Funko[] = await controller.findAll()
 
-      expect(result).toEqual(testFunkos)
+      expect(await controller.findAll()).toEqual(testFunkos)
       expect(service.findAll).toHaveBeenCalled()
     })
   })

@@ -13,9 +13,12 @@ import {
 } from '../../../src/categories/entities/category.entity'
 import { CreateCategoryDto } from '../../../src/categories/dto/create-category.dto'
 import { UpdateCategoryDto } from '../../../src/categories/dto/update-category.dto'
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 describe('CategoriesController (e2e)', () => {
   let app: INestApplication
+  let cacheManager: Cache
   const endpoint = '/categories'
   const simulatedDate = new Date('2021-01-01T00:00:00.000Z')
 
@@ -49,20 +52,31 @@ describe('CategoriesController (e2e)', () => {
     getByName: jest.fn(),
   }
 
+  const cacheManagerMock = {
+    get: jest.fn(() => Promise.resolve()),
+    set: jest.fn(() => Promise.resolve()),
+    store: {
+      keys: jest.fn(),
+    },
+  }
+
   /**
    * Antes de cada test
    */
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [CategoriesController],
       providers: [
         CategoriesService,
         { provide: CategoriesService, useValue: mockCategoriesService },
+        { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
     }).compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()
+    cacheManager = moduleFixture.get<Cache>(CACHE_MANAGER)
   })
 
   /**
@@ -83,12 +97,19 @@ describe('CategoriesController (e2e)', () => {
         .get(endpoint)
         .expect(200)
 
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
+
       const expectedBodyString = JSON.stringify([testCategories])
       const receivedBodyString = JSON.stringify(body)
 
       expect(receivedBodyString).toEqual(expectedBodyString)
       expect(mockCategoriesService.findAll).toHaveBeenCalled()
+      expect(cacheManager.get).toHaveBeenCalled()
+      expect(cacheManager.set).toHaveBeenCalled()
     })
+
+    //TODO: 2
   })
 
   /**
@@ -97,6 +118,9 @@ describe('CategoriesController (e2e)', () => {
   describe('GET /categories/:id', () => {
     it('debería retornar la categoría por su ID', async () => {
       mockCategoriesService.findOne.mockResolvedValue(testCategories[0])
+
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
 
       const { body } = await request(app.getHttpServer())
         .get(`${endpoint}/${testCategories[0].id}`)
@@ -123,6 +147,8 @@ describe('CategoriesController (e2e)', () => {
   describe('POST /categories', () => {
     it('debería de crear una nueva categoría', async () => {
       mockCategoriesService.create.mockResolvedValue(testCategories[0])
+
+      jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([])
 
       const { body } = await request(app.getHttpServer())
         .post(endpoint)

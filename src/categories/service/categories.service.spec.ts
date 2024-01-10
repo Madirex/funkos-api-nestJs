@@ -9,11 +9,14 @@ import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { CategoriesNotificationsGateway } from '../../websockets/notifications/categories-notifications.gateway'
 import { ResponseCategoryDto } from '../dto/response-category.dto'
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 describe('CategoriesService', () => {
   let service: CategoriesService
   let categoriesRepository: Repository<Category>
   let categoriesNotificationsGateway: CategoriesNotificationsGateway
+  let cacheManager: Cache
 
   const categoriesMapperMock = {
     toEntity: jest.fn(),
@@ -25,8 +28,17 @@ describe('CategoriesService', () => {
     sendMessage: jest.fn(),
   }
 
+  const cacheManagerMock = {
+    get: jest.fn(() => Promise.resolve()),
+    set: jest.fn(() => Promise.resolve()),
+    store: {
+      keys: jest.fn(),
+    },
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       providers: [
         CategoriesService,
         {
@@ -41,6 +53,7 @@ describe('CategoriesService', () => {
           provide: CategoriesNotificationsGateway,
           useValue: categoriesNotificationsGatewayMock,
         },
+        { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
     }).compile()
 
@@ -51,6 +64,7 @@ describe('CategoriesService', () => {
     categoriesNotificationsGateway = module.get<CategoriesNotificationsGateway>(
       CategoriesNotificationsGateway,
     )
+    cacheManager = module.get<Cache>(CACHE_MANAGER)
   })
 
   it('debería estar definido', () => {
@@ -61,6 +75,9 @@ describe('CategoriesService', () => {
     it('debería devolver un array de categorías', async () => {
       // Arrange
       const mockCategories: Category[] = []
+
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
 
       const mockCategoryResponse: ResponseCategoryDto = {
         id: 2,
@@ -82,7 +99,11 @@ describe('CategoriesService', () => {
       // Assert
       expect(res).toEqual(mockCategories)
       expect(categoriesRepository.find).toHaveBeenCalled()
+      expect(cacheManager.get).toHaveBeenCalled()
+      expect(cacheManager.set).toHaveBeenCalled()
     })
+
+    //TODO: MODIFY ESTO TAMBIÉN
   })
 
   describe('findOne', () => {
@@ -107,12 +128,14 @@ describe('CategoriesService', () => {
         createdAt: new Date('2023-01-01T12:00:00Z'),
         updatedAt: new Date('2023-01-02T14:30:00Z'),
       }
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
       jest
         .spyOn(categoriesRepository, 'findOneBy')
         .mockResolvedValue(mockCategory)
       jest
         .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
         .mockReturnValue(mockCategoryResponse)
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
 
       // Act
       const res = await service.findOne(id)
@@ -167,6 +190,7 @@ describe('CategoriesService', () => {
       jest
         .spyOn(categoriesMapperMock, 'mapEntityToResponseDto')
         .mockReturnValue(mockCategoryResponse)
+      jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([])
 
       // Act
       const res = await service.create(createCategoryDto)

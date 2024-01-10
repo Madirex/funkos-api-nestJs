@@ -9,9 +9,12 @@ import { FunkosController } from '../../../src/funkos/controller/funkos.controll
 import { FunkosService } from '../../../src/funkos/service/funkos.service'
 import { CreateFunkoDto } from '../../../src/funkos/dto/create-funko.dto'
 import { UpdateFunkoDto } from '../../../src/funkos/dto/update-funko.dto'
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 describe('FunkosController (e2e)', () => {
   let app: INestApplication
+  let cacheManager: Cache
   const endpoint = '/funkos'
 
   const testFunkoId = '1'
@@ -37,17 +40,28 @@ describe('FunkosController (e2e)', () => {
     updateImage: jest.fn(),
   }
 
+  const cacheManagerMock = {
+    get: jest.fn(() => Promise.resolve()),
+    set: jest.fn(() => Promise.resolve()),
+    store: {
+      keys: jest.fn(),
+    },
+  }
+
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [FunkosController],
       providers: [
         FunkosService,
         { provide: FunkosService, useValue: mockFunkosService },
+        { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
     }).compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()
+    cacheManager = moduleFixture.get<Cache>(CACHE_MANAGER)
   })
 
   afterAll(async () => {
@@ -62,14 +76,24 @@ describe('FunkosController (e2e)', () => {
         .get(endpoint)
         .expect(200)
 
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
+
       expect(body).toEqual([testFunko])
       expect(mockFunkosService.findAll).toHaveBeenCalled()
+      expect(cacheManager.get).toHaveBeenCalled()
+      expect(cacheManager.set).toHaveBeenCalled()
     })
+
+    //TODO: 1
   })
 
   describe('GET /funkos/:id', () => {
     it('debería retornar el Funko por su ID', async () => {
       mockFunkosService.findOne.mockResolvedValue(testFunko)
+
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
 
       const { body } = await request(app.getHttpServer())
         .get(`${endpoint}/${testFunkoId}`)
@@ -91,6 +115,8 @@ describe('FunkosController (e2e)', () => {
   describe('POST /funkos', () => {
     it('debería crear un nuevo Funko', async () => {
       mockFunkosService.create.mockResolvedValue(testFunko)
+
+      jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([])
 
       const { body } = await request(app.getHttpServer())
         .post(endpoint)

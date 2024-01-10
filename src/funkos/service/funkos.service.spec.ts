@@ -15,6 +15,8 @@ import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { StorageService } from '../../storage/storage.service'
 import { FunkosNotificationsGateway } from '../../websockets/notifications/funkos-notifications.gateway'
 import { ResponseFunkoDto } from '../dto/response-funko.dto'
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 describe('FunkosService', () => {
   let service: FunkosService
@@ -22,6 +24,7 @@ describe('FunkosService', () => {
   let categoryRepository: Repository<Category>
   let storageService: StorageService
   let funkosNotificationsGateway: FunkosNotificationsGateway
+  let cacheManager: Cache
 
   const funkoMapperMock = {
     toEntity: jest.fn(),
@@ -38,8 +41,17 @@ describe('FunkosService', () => {
     sendMessage: jest.fn(),
   }
 
+  const cacheManagerMock = {
+    get: jest.fn(() => Promise.resolve()),
+    set: jest.fn(() => Promise.resolve()),
+    store: {
+      keys: jest.fn(),
+    },
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       providers: [
         FunkosService,
         {
@@ -59,6 +71,7 @@ describe('FunkosService', () => {
           useValue: funkosNotificationsGatewayMock,
         },
         { provide: StorageService, useValue: storageServiceMock },
+        { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
     }).compile()
 
@@ -71,6 +84,7 @@ describe('FunkosService', () => {
     funkosNotificationsGateway = module.get<FunkosNotificationsGateway>(
       FunkosNotificationsGateway,
     )
+    cacheManager = module.get<Cache>(CACHE_MANAGER)
   })
 
   it('debería estar definido', () => {
@@ -80,11 +94,19 @@ describe('FunkosService', () => {
   describe('findAll', () => {
     it('debería devolver un array de Funkos', async () => {
       const mockFunkos: Funko[] = []
+
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
+
       jest.spyOn(funkoRepository, 'find').mockResolvedValue(mockFunkos)
       const res = await service.findAll()
       expect(res).toEqual(mockFunkos)
       expect(funkoRepository.find).toHaveBeenCalled()
+      expect(cacheManager.get).toHaveBeenCalled()
+      expect(cacheManager.set).toHaveBeenCalled()
     })
+
+    //TODO: MODIFY ESTO TAMBIÉN
   })
 
   describe('findOne', () => {
@@ -110,7 +132,9 @@ describe('FunkosService', () => {
         isActive: true,
       }
 
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
       jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(mockFunko)
+      jest.spyOn(cacheManager, 'set').mockResolvedValue()
       const res = await service.findOne(id)
       expect(res).toEqual(mockFunko)
       expect(funkoRepository.findOne).toHaveBeenCalledWith({
@@ -162,6 +186,8 @@ describe('FunkosService', () => {
       jest.spyOn(service, 'getCategoryByName').mockResolvedValue(null)
       jest.spyOn(funkoMapperMock, 'toEntity').mockReturnValue(mockFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockFunko)
+      jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([])
+
       const res = await service.create(createFunkoDto)
       expect(res).toEqual(mockFunko)
       expect(service.getByName).toHaveBeenCalled()

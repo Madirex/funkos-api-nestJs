@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -21,6 +22,8 @@ import {
   WsNotification,
 } from '../../websockets/notifications/notification.model'
 import { ResponseFunkoDto } from '../dto/response-funko.dto'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 /**
  * Servicio de Funkos
@@ -45,6 +48,7 @@ export class FunkosService {
     private readonly funkoMapper: FunkoMapper,
     private readonly storageService: StorageService,
     private readonly funkosNotificationsGateway: FunkosNotificationsGateway,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /**
@@ -53,9 +57,22 @@ export class FunkosService {
    */
   async findAll() {
     this.logger.log('Obteniendo todos los Funkos')
-    return this.funkoRepository.find({
+
+    // check cache
+    const cache = await this.cacheManager.get(`all_funkos`)
+    if (cache) {
+      this.logger.log('Cache hit')
+      return cache
+    }
+
+    const res = this.funkoRepository.find({
       relations: ['category'],
     })
+
+    // Se guarda en caché
+    await this.cacheManager.set(`all_funkos`, res, 60)
+
+    return res
   }
 
   /**
@@ -65,19 +82,32 @@ export class FunkosService {
    */
   async findOne(@Param('id') id: string): Promise<Funko> {
     this.logger.log(`Obteniendo Funko por id: ${id}`)
+
+    // Caché
+    const cache: Funko = await this.cacheManager.get(`funko_${id}`)
+    if (cache) {
+      console.log('Cache hit')
+      this.logger.log('Cache hit')
+      return cache
+    }
+
     const isNumeric = !isNaN(Number(id))
     if (!id || isNumeric || !isUUID(id)) {
       throw new BadRequestException('ID no válido')
     }
-    const funko = await this.funkoRepository.findOne({
+    const res = await this.funkoRepository.findOne({
       where: { id },
       relations: ['category'],
     })
 
-    if (!funko) {
+    if (!res) {
       throw new NotFoundException(`Funko con ID: ${id} no encontrado`)
     }
-    return funko
+
+    // Se guarda en caché
+    await this.cacheManager.set(`funko_${id}`, res, 60)
+
+    return res
   }
 
   /**
@@ -111,6 +141,10 @@ export class FunkosService {
 
     const dto = this.funkoMapper.mapEntityToResponseDto(funko)
     this.onChange(NotificationType.CREATE, dto)
+
+    // caché
+    await this.invalidateCacheKey('all_funkos')
+
     return await this.funkoRepository.save({
       ...funko,
     })
@@ -189,6 +223,10 @@ export class FunkosService {
 
     this.onChange(NotificationType.UPDATE, dto)
 
+    // invalidar caché
+    await this.invalidateCacheKey(`funko_${id}`)
+    await this.invalidateCacheKey('all_funkos')
+
     return await this.funkoRepository.save({
       ...funkoToUpdate,
       ...funko,
@@ -211,6 +249,10 @@ export class FunkosService {
     const dto = this.funkoMapper.mapEntityToResponseDto(funkoToRemove)
 
     this.onChange(NotificationType.DELETE, dto)
+
+    // invalidar caché
+    await this.invalidateCacheKey(`funko_${id}`)
+    await this.invalidateCacheKey('all_funkos')
 
     return await this.funkoRepository.save({
       ...funkoToRemove,
@@ -303,7 +345,22 @@ export class FunkosService {
 
     this.onChange(NotificationType.UPDATE, dto)
 
+    // invalidar caché
+    await this.invalidateCacheKey(`funko_${id}`)
+    await this.invalidateCacheKey('all_funkos')
+
     return await this.funkoRepository.save(funkoToUpdate)
+  }
+
+  /**
+   * @description Método que invalida una clave de caché
+   * @param keyPattern Patrón de la clave a invalidar
+   */
+  async invalidateCacheKey(keyPattern: string): Promise<void> {
+    const cacheKeys = await this.cacheManager.store.keys()
+    const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
+    const promises = keysToDelete.map((key) => this.cacheManager.del(key))
+    await Promise.all(promises)
   }
 
   /**
