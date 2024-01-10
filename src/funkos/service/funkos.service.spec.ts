@@ -136,15 +136,24 @@ describe('FunkosService', () => {
         isActive: true,
       }
 
+      const responseFunkoDto: ResponseFunkoDto = {
+        id: id,
+        name: 'Funko Ejemplo',
+        price: 19.99,
+        stock: 10,
+        image: 'https://www.madirex.com/favicon.ico',
+        category: 'test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
+
       jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
+      jest.spyOn(service, 'findOne').mockResolvedValue(responseFunkoDto)
       jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(mockFunko)
       jest.spyOn(cacheManager, 'set').mockResolvedValue()
       const res = await service.findOne(id)
-      expect(res).toEqual(mockFunko)
-      expect(funkoRepository.findOne).toHaveBeenCalledWith({
-        where: { id: id },
-        relations: ['category'],
-      })
+      expect(res).toEqual(responseFunkoDto)
     })
 
     it('debería lanzar NotFoundException si no se encuentra el Funko con el ID', async () => {
@@ -186,14 +195,29 @@ describe('FunkosService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         isActive: true,
       }
+
+      const responseMockFunko: ResponseFunkoDto = {
+        id: id,
+        name: 'Funko Ejemplo',
+        price: 19.99,
+        stock: 10,
+        image: 'https://www.madirex.com/favicon.ico',
+        category: 'test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
       jest.spyOn(service, 'getByName').mockResolvedValue(null)
       jest.spyOn(service, 'getCategoryByName').mockResolvedValue(null)
       jest.spyOn(funkoMapperMock, 'toEntity').mockReturnValue(mockFunko)
+      jest
+        .spyOn(funkoMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(responseMockFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockFunko)
       jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([])
 
       const res = await service.create(createFunkoDto)
-      expect(res).toEqual(mockFunko)
+      expect(res).toEqual(responseMockFunko)
       expect(service.getByName).toHaveBeenCalled()
       expect(service.getCategoryByName).toHaveBeenCalled()
       expect(funkoMapperMock.toEntity).toHaveBeenCalledWith(
@@ -211,21 +235,13 @@ describe('FunkosService', () => {
         image: 'https://www.madirex.com/favicon.ico',
         category: 'test',
       }
-      const existingFunko: Funko = {
+      const existingFunko: ResponseFunkoDto = {
         id: uuidv4(),
         name: 'Funko Ejemplo',
         price: 15.99,
         stock: 5,
         image: 'https://www.example.com/favicon.ico',
-        category: {
-          id: 2,
-          name: 'test',
-          categoryType: CategoryType.OTHER,
-          createdAt: new Date('2023-01-01T12:00:00Z'),
-          updatedAt: new Date('2023-01-01T12:00:00Z'),
-          isActive: true,
-          funkos: [],
-        },
+        category: 'test',
         createdAt: new Date('2023-01-01T12:00:00Z'),
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         isActive: true,
@@ -270,7 +286,22 @@ describe('FunkosService', () => {
         isActive: true,
       }
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(existingFunko)
+      const mockResponseFunkoResponse: ResponseFunkoDto = {
+        id: id,
+        name: 'Funko Old',
+        price: 19.99,
+        stock: 10,
+        image: 'https://www.antiguo-ejemplo.com/favicon.ico',
+        category: 'old-test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
+
+      jest
+        .spyOn(service, 'findOne')
+        .mockResolvedValue(mockResponseFunkoResponse)
+      jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(existingFunko)
       jest.spyOn(service, 'getByName').mockResolvedValue(null)
       jest.spyOn(service, 'getCategoryByName').mockResolvedValue(null)
       jest
@@ -278,9 +309,13 @@ describe('FunkosService', () => {
         .mockReturnValue(existingFunko)
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(existingFunko)
 
+      jest
+        .spyOn(funkoMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockResponseFunkoResponse)
+
       const res = await service.update(id, updateFunkoDto)
 
-      expect(res).toEqual(existingFunko)
+      expect(res).toEqual(mockResponseFunkoResponse)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(service.getByName).toHaveBeenCalledWith(updateFunkoDto.name.trim())
       expect(service.getCategoryByName).toHaveBeenCalledWith(
@@ -313,6 +348,7 @@ describe('FunkosService', () => {
     it('debería lanzar NotFoundException si el Funko a actualizar no se encuentra', async () => {
       // Arrange
       jest.spyOn(service, 'findOne').mockResolvedValue(null)
+      jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(null)
       const uuid = uuidv4()
 
       // Act & Assert
@@ -328,14 +364,15 @@ describe('FunkosService', () => {
       const updateFunkoDto: UpdateFunkoDto = {
         name: 'Nuevo Nombre',
       }
-      const existingFunko: Funko = {
+
+      const funko: Funko = {
         id: uuidv4(),
         name: 'Nuevo Nombre',
         price: 25.99,
         stock: 15,
         image: 'https://www.nuevo-ejemplo.com/favicon.ico',
         category: {
-          id: 3,
+          id: 4,
           name: 'old-test',
           categoryType: CategoryType.OTHER,
           createdAt: new Date('2023-01-01T12:00:00Z'),
@@ -348,7 +385,20 @@ describe('FunkosService', () => {
         isActive: true,
       }
 
+      const existingFunko: ResponseFunkoDto = {
+        id: uuidv4(),
+        name: 'Nuevo Nombre',
+        price: 25.99,
+        stock: 15,
+        image: 'https://www.nuevo-ejemplo.com/favicon.ico',
+        category: 'old-test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
+
       jest.spyOn(service, 'findOne').mockResolvedValue(existingFunko)
+      jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(funko)
       jest.spyOn(service, 'getByName').mockResolvedValue(existingFunko)
 
       // Act & Assert
@@ -383,12 +433,33 @@ describe('FunkosService', () => {
         isActive: true,
       }
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(existingFunko)
+      const mockResponseFunkoResponse: ResponseFunkoDto = {
+        id: id,
+        name: 'Funko a Eliminar',
+        price: 19.99,
+        stock: 10,
+        image: 'https://www.eliminar-ejemplo.com/favicon.ico',
+        category: 'eliminar-test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
+
+      jest
+        .spyOn(service, 'findOne')
+        .mockResolvedValue(mockResponseFunkoResponse)
+
+      jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(existingFunko)
+
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(existingFunko)
+
+      jest
+        .spyOn(funkoMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockResponseFunkoResponse)
 
       const res = await service.remove(id)
 
-      expect(res).toEqual(existingFunko)
+      expect(res).toEqual(mockResponseFunkoResponse)
       expect(service.findOne).toHaveBeenCalledWith(id)
       expect(funkoRepository.save).toHaveBeenCalledWith({
         ...existingFunko,
@@ -407,8 +478,9 @@ describe('FunkosService', () => {
   describe('getByName', () => {
     it('debería devolver un Funko dado el nombre', async () => {
       const nombre = 'Funko Buscado'
+      const id = uuidv4()
       const mockFunko: Funko = {
-        id: uuidv4(),
+        id: id,
         name: nombre,
         price: 22.99,
         stock: 12,
@@ -426,6 +498,17 @@ describe('FunkosService', () => {
         updatedAt: new Date('2023-01-02T14:30:00Z'),
         isActive: true,
       }
+      const mockResponseFunkoResponse: ResponseFunkoDto = {
+        id: id,
+        name: nombre,
+        price: 22.99,
+        stock: 12,
+        image: 'https://www.buscado-ejemplo.com/favicon.ico',
+        category: 'buscado-test',
+        createdAt: new Date('2023-01-01T12:00:00Z'),
+        updatedAt: new Date('2023-01-02T14:30:00Z'),
+        isActive: true,
+      }
 
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
@@ -437,9 +520,13 @@ describe('FunkosService', () => {
         .spyOn(funkoRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder as any)
 
+      jest
+        .spyOn(funkoMapperMock, 'mapEntityToResponseDto')
+        .mockReturnValue(mockResponseFunkoResponse)
+
       const res = await service.getByName(nombre)
 
-      expect(res).toEqual(mockFunko)
+      expect(res).toEqual(mockResponseFunkoResponse)
       expect(funkoRepository.createQueryBuilder).toHaveBeenCalled()
     })
   })
@@ -490,7 +577,11 @@ describe('FunkosService', () => {
       mockNewFunko.image = 'http://localhost/storage/new_image.png'
       mockResponseFunkoResponse.image = 'http://localhost/storage/new_image.png'
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(mockNewFunko)
+      jest
+        .spyOn(service, 'findOne')
+        .mockResolvedValue(mockResponseFunkoResponse)
+
+      jest.spyOn(funkoRepository, 'findOne').mockResolvedValue(mockNewFunko)
 
       jest.spyOn(funkoRepository, 'save').mockResolvedValue(mockNewFunko)
       jest
