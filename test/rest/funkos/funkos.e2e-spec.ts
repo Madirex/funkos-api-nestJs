@@ -183,7 +183,7 @@ describe('FunkosController (e2e)', () => {
   })
 
   describe('PATCH /funkos/image/:id', () => {
-    it('debería actualizar la imagen de Funko', async () => {
+    it('debería dar error porque la imagen es un jpg falso', async () => {
       const file = Buffer.from('file')
 
       mockFunkosService.exists.mockResolvedValue(true)
@@ -193,7 +193,7 @@ describe('FunkosController (e2e)', () => {
         .patch(`${endpoint}/image/${testFunko.id}`)
         .attach('file', file, 'image.jpg')
         .set('Content-Type', 'multipart/form-data')
-        .expect(200)
+        .expect(400)
     })
   })
 })
