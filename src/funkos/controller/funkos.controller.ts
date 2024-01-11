@@ -143,11 +143,10 @@ export class FunkosController {
     const allowedMimes = ['image/jpeg', 'image/png']
     const maxFileSizeInBytes = 1024 * 1024 // 1 megabyte
     if (file === undefined) throw new BadRequestException('Fichero no enviado')
-    else if (!allowedMimes.includes(file.mimetype)) {
-      throw new BadRequestException(
-        'Fichero no soportado. No es del tipo imagen válido',
-      )
-    } else if (file.mimetype != Util.detectFileType(file)) {
+    else if (
+      !allowedMimes.includes(file.mimetype) ||
+      file.mimetype != Util.detectFileType(file)
+    ) {
       throw new BadRequestException(
         'Fichero no soportado. No es del tipo imagen válido',
       )

@@ -6,6 +6,7 @@ import { plainToClass } from 'class-transformer'
 import { Category } from '../../categories/entities/category.entity'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { ResponseFunkoDto } from '../dto/response-funko.dto'
+import { Util } from '../../util/util'
 
 /**
  * Mapper de Funkos
@@ -64,24 +65,7 @@ export class FunkoMapper {
     if (entity && entity.category && 'name' in entity.category) {
       responseFunkoDto.category = entity.category.name
     }
-
-    //agregarle el path a la imagen
-    const apiVersion = process.env.API_VERSION
-      ? `/${process.env.API_VERSION}`
-      : '/v1'
-    const apiPort = process.env.API_PORT ? `${process.env.API_PORT}` : '3000'
-    const apiHost = process.env.API_HOST
-      ? `${process.env.API_HOST}`
-      : 'localhost'
-
-    const isHttps = process.env.API_HTTPS ? process.env.API_HTTPS : false
-    let protocol = 'http'
-
-    if (isHttps) {
-      protocol = 'https'
-    }
-    responseFunkoDto.image = `${protocol}://${apiHost}:${apiPort}${apiVersion}/storage/${responseFunkoDto.image}`
-
+    Util.responseFunkoDtoAddPath(responseFunkoDto) //agregarle el path a la imagen
     return responseFunkoDto
   }
 }
