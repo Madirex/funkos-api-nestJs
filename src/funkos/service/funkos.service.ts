@@ -357,7 +357,7 @@ export class FunkosService {
       this.logger.log(`Generando url para ${file.filename}`)
       const apiVersion = process.env.API_VERSION
         ? `/${process.env.API_VERSION}`
-        : ''
+        : '/v1'
       filePath = `${req.protocol}://${req.get('host')}${apiVersion}/storage/${
         file.filename
       }`
