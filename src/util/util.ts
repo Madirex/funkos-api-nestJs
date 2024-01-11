@@ -57,7 +57,9 @@ export class Util {
         throw new BadRequestException('Tipo de archivo no soportado.')
       }
     } catch (error) {
-      throw new BadRequestException('Error al leer el contenido del archivo.')
+      throw new BadRequestException(
+        `Error al leer el contenido del archivo.${error}`,
+      )
     }
   }
 

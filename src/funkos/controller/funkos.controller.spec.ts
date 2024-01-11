@@ -9,6 +9,20 @@ import { Request } from 'express'
 import { CacheModule } from '@nestjs/cache-manager'
 import { ResponseFunkoDto } from '../dto/response-funko.dto'
 
+const id = uuidv4()
+
+const bytesPNG: number[] = [
+  137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0,
+  0, 0, 1, 8, 6, 0, 0, 0, 31, 21, -60, -60, 137, 80, 78, 71, 13, 10, 26, 10, 0,
+  0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, -60,
+  -60,
+]
+
+const bytesJPEG: number[] = [
+  255, 216, 255, 224, 0, 16, 74, 70, 73, 70, 0, 1, 1, 0, 96, 0, 0, 255, 219, 0,
+  67, 0, 8, 6, 6, 7, 6, 5, 8, 7, 7, 7, 9, 9,
+]
+
 describe('FunkosController', () => {
   let controller: FunkosController
   let service: FunkosService
@@ -235,6 +249,52 @@ describe('FunkosController', () => {
       await expect(
         controller.updateImage(mockId, mockFile, mockReq),
       ).rejects.toThrow(BadRequestException)
+    })
+
+    it('debería lanzar BadRequestException si el archivo es undefined', async () => {
+      const req = { params: { id } } as any
+
+      await expect(controller.updateImage(id, undefined, req)).rejects.toThrow(
+        BadRequestException,
+      )
+
+      expect(service.updateImage).not.toHaveBeenCalled()
+    })
+
+    it('debería lanzar BadRequestException por tipo de archivo no soportado', async () => {
+      const req = { params: { id } } as any
+      const file = {
+        originalname: 'test.txt', // Example of an unsupported file type
+        mimetype: 'text/plain',
+      } as Express.Multer.File
+
+      jest.mock('../../util/util', () => ({
+        Util: {
+          detectFileType: jest.fn(() => false),
+          getCurrentDateTimeString: jest.fn(() => 'some-date-time'),
+        },
+      }))
+
+      await expect(controller.updateImage(id, file, req)).rejects.toThrow(
+        BadRequestException,
+      )
+
+      expect(service.updateImage).not.toHaveBeenCalled()
+    })
+
+    it('se debe llamar al servicio updateImage y dar como tipo de imagen no válido', async () => {
+      const req = { params: { id } } as any
+
+      const pngBytes = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]
+      const file = {
+        originalname: 'test.png',
+        mimetype: 'image/exe',
+        buffer: pngBytes,
+      } as unknown as Express.Multer.File
+
+      await expect(controller.updateImage(id, file, req)).rejects.toThrow(
+        BadRequestException,
+      )
     })
   })
 })
