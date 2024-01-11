@@ -156,6 +156,6 @@ export class FunkosController {
         `El tamaño del archivo no puede ser mayor a ${maxFileSizeInBytes} bytes.`,
       )
     }
-    return await this.funkosService.updateImage(id, file, req, true)
+    return await this.funkosService.updateImage(id, file, req, false)
   }
 }

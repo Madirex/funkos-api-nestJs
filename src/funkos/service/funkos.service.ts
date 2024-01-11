@@ -323,7 +323,7 @@ export class FunkosService {
     id: string,
     file: Express.Multer.File,
     req: Request,
-    withUrl: boolean = true,
+    withUrl: boolean = false,
   ) {
     this.logger.log(`Actualizando imagen Funko por id: ${id}`)
     await this.findOne(id)

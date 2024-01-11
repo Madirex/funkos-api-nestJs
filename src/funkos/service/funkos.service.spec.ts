@@ -593,12 +593,11 @@ describe('FunkosService', () => {
           uuidv4(),
           mockFile as any,
           mockRequest as any,
-          true,
+          false,
         ),
       ).toEqual(mockResponseFunkoResponse)
 
       expect(storageService.removeFile).toHaveBeenCalled()
-      expect(storageService.getFileNameWithoutUrl).toHaveBeenCalled()
     })
   })
 })
