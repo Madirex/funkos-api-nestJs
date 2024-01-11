@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { NotFoundException } from '@nestjs/common'
+import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { FunkosController } from './funkos.controller'
 import { FunkosService } from '../service/funkos.service'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
@@ -221,7 +221,7 @@ describe('FunkosController', () => {
   })
 
   describe('updateImage', () => {
-    it('debería actualizar la imagen del Funko', async () => {
+    it('debería dar error porque la imagen es un png falso', async () => {
       const mockId = uuidv4()
       const mockFile = {
         originalname: 'test.png',
@@ -232,14 +232,9 @@ describe('FunkosController', () => {
 
       jest.spyOn(service, 'updateImage').mockResolvedValue(mockResult)
 
-      await controller.updateImage(mockId, mockFile, mockReq)
-      expect(service.updateImage).toHaveBeenCalledWith(
-        mockId,
-        mockFile,
-        mockReq,
-        true,
-      )
-      expect(mockResult).toBeInstanceOf(ResponseFunkoDto)
+      await expect(
+        controller.updateImage(mockId, mockFile, mockReq),
+      ).rejects.toThrow(BadRequestException)
     })
   })
 })
