@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS funkos (
                                       name VARCHAR(255) UNIQUE NOT NULL,
     price DOUBLE PRECISION DEFAULT 0.0,
     stock INTEGER DEFAULT 0,
-    image TEXT DEFAULT 'https://www.madirex.com/favicon.ico',
+    image TEXT DEFAULT 'empty.png',
     category_id INTEGER REFERENCES categories(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

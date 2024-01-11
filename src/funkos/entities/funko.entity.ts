@@ -14,7 +14,7 @@ import { Category } from '../../categories/entities/category.entity'
  */
 @Entity('funkos')
 export class Funko {
-  public static IMAGE_DEFAULT = 'https://www.madirex.com/favicon.ico'
+  public static IMAGE_DEFAULT = 'empty.png'
 
   @PrimaryColumn({ type: 'uuid' })
   id: string

@@ -121,7 +121,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: {
           id: 1,
           name: 'test',
@@ -141,7 +141,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: 'test',
         createdAt: new Date('2023-01-01T12:00:00Z'),
         updatedAt: new Date('2023-01-02T14:30:00Z'),
@@ -173,7 +173,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: 'test',
       }
       const mockFunko: Funko = {
@@ -181,7 +181,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: {
           id: 1,
           name: 'test',
@@ -201,7 +201,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: 'test',
         createdAt: new Date('2023-01-01T12:00:00Z'),
         updatedAt: new Date('2023-01-02T14:30:00Z'),
@@ -232,7 +232,7 @@ describe('FunkosService', () => {
         name: 'Funko Ejemplo',
         price: 19.99,
         stock: 10,
-        image: 'https://www.madirex.com/favicon.ico',
+        image: 'empty.png',
         category: 'test',
       }
       const existingFunko: ResponseFunkoDto = {

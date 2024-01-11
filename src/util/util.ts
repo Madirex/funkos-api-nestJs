@@ -81,6 +81,12 @@ export class Util {
     if (isHttps) {
       protocol = 'https'
     }
-    responseFunkoDto.image = `${protocol}://${apiHost}:${apiPort}${apiVersion}/storage/${responseFunkoDto.image}`
+    if (
+      responseFunkoDto &&
+      responseFunkoDto.image != null &&
+      responseFunkoDto.image != ''
+    ) {
+      responseFunkoDto.image = `${protocol}://${apiHost}:${apiPort}${apiVersion}/storage/${responseFunkoDto.image}`
+    }
   }
 }
