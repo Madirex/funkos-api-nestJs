@@ -53,7 +53,6 @@ describe('FunkosController', () => {
   })
 
   describe('findAll', () => {
-    const date = new Date()
     it('debería retornar todos los Funkos', async () => {
       const paginateOptions = {
         page: 1,
