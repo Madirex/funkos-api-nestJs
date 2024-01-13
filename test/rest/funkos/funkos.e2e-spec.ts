@@ -89,6 +89,18 @@ describe('FunkosController (e2e)', () => {
       const result = await mockFunkosService.findAll()
       expect(result).toEqual(testFunkos)
     })
+
+    it('debería retornar una página de Funkos con una query', async () => {
+      mockFunkosService.findAll.mockResolvedValue([testFunko])
+
+      const { body } = await request(app.getHttpServer())
+          .get(`${endpoint}?page=1&limit=10`)
+          .expect(200)
+      expect(() => {
+        expect(body).toEqual([testFunko])
+        expect(mockFunkosService.findAll).toHaveBeenCalled()
+      })
+    })
   })
 
   describe('GET /funkos/:id', () => {
