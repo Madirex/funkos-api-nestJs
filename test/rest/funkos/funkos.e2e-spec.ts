@@ -94,8 +94,8 @@ describe('FunkosController (e2e)', () => {
       mockFunkosService.findAll.mockResolvedValue([testFunko])
 
       const { body } = await request(app.getHttpServer())
-          .get(`${endpoint}?page=1&limit=10`)
-          .expect(200)
+        .get(`${endpoint}?page=1&limit=10`)
+        .expect(200)
       expect(() => {
         expect(body).toEqual([testFunko])
         expect(mockFunkosService.findAll).toHaveBeenCalled()
