@@ -4,11 +4,6 @@ import { StorageController } from './storage.controller'
 import { StorageService } from './storage.service'
 import { Response as ExpressResponse } from 'express'
 
-const mockRequest: any = {
-  protocol: 'http',
-  get: (header: string) => 'localhost',
-}
-
 describe('StorageController', () => {
   let storageController: StorageController
   let storageService: StorageService
