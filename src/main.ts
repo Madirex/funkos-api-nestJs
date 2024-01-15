@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { config } from 'dotenv'
 
 /*
  * Función principal de la aplicación
@@ -12,4 +13,5 @@ async function bootstrap() {
   await app.listen(process.env.API_PORT || 3000)
 }
 
+config()
 bootstrap()
