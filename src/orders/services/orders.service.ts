@@ -1,30 +1,190 @@
-import { Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Order, OrderDocument } from '../schemas/order.schema'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Funko } from '../../funkos/entities/funko.entity'
+import { PaginateModel } from 'mongoose'
+import { Repository } from 'typeorm'
+import { OrdersMapper } from '../mappers/orders.mapper'
 import { CreateOrderDto } from '../dto/create-order.dto'
 import { UpdateOrderDto } from '../dto/update-order.dto'
 
+export const OrdersOrderByValues: string[] = ['_id', 'userId']
+export const OrdersOrderValues: string[] = ['asc', 'desc']
+
+/**
+ * @description The Orders Service
+ */
 @Injectable()
 export class OrdersService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order'
+  private logger = new Logger(OrdersService.name)
+
+  /**
+   * Inicializa el servicio de pedidos
+   * @param ordersRepository El repositorio de pedidos
+   * @param funkosRepository El repositorio de funkos
+   * @param ordersMapper El mapeador de pedidos
+   */
+  constructor(
+    @InjectModel(Order.name)
+    private ordersRepository: PaginateModel<OrderDocument>,
+    @InjectRepository(Funko)
+    private readonly funkosRepository: Repository<Funko>,
+    private readonly ordersMapper: OrdersMapper,
+  ) {}
+
+  /**
+   * Busca todos los pedidos
+   * @param page El número de página
+   * @param limit El límite de resultados por página
+   * @param orderBy El campo por el que ordenar
+   * @param order El orden de ordenación
+   */
+  async findAll(page: number, limit: number, orderBy: string, order: string) {
+    this.logger.log(
+      `Buscando todos los pedidos con paginación y filtros: ${JSON.stringify({
+        page,
+        limit,
+        orderBy,
+        order,
+      })}`,
+    )
+    const options = {
+      page,
+      limit,
+      sort: {
+        [orderBy]: order,
+      },
+      collection: 'es_ES',
+    }
+
+    return await this.ordersRepository.paginate({}, options)
   }
 
-  findAll() {
-    return `This action returns all orders`
+  /**
+   * Busca un pedido por su ID
+   * @param id El ID del pedido
+   */
+  async findOne(id: string) {
+    this.logger.log(`Buscando pedido con id ${id}`)
+    const orderToFind = await this.ordersRepository.findById(id).exec()
+    if (!orderToFind) {
+      throw new NotFoundException(`Pedido con id ${id} no encontrado`)
+    }
+    return orderToFind
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`
+  /**
+   * Busca todos los pedidos de un usuario
+   * @param userId El ID del usuario
+   */
+  async findByUserId(userId: number) {
+    this.logger.log(`Buscando pedidos por usuario ${userId}`)
+    return await this.ordersRepository.find({ userId: userId }).exec()
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`
+  /**
+   * Crea un nuevo pedido
+   * @param createOrderDto Los datos del pedido a crear
+   */
+  async create(createOrderDto: CreateOrderDto) {
+    this.logger.log(`Creando pedido ${JSON.stringify(createOrderDto)}`)
+
+    const orderToBeSaved = this.ordersMapper.toEntity(createOrderDto)
+
+    await this.checkOrder(orderToBeSaved)
+
+    const orderToSave = await this.reserveStockOrders(orderToBeSaved)
+
+    orderToSave.createdAt = new Date()
+    orderToSave.updatedAt = new Date()
+
+    return await this.ordersRepository.create(orderToSave)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`
+  /**
+   * Actualiza un pedido
+   * @param id El ID del pedido
+   * @param updateOrderDto Los datos del pedido a actualizar
+   */
+  async update(id: string, updateOrderDto: UpdateOrderDto) {
+    this.logger.log(
+      `Actualizando pedido con id ${id} y ${JSON.stringify(updateOrderDto)}`,
+    )
+
+    const orderToUpdate = await this.ordersRepository.findById(id).exec()
+    if (!orderToUpdate) {
+      throw new NotFoundException(`Pedido con id ${id} no encontrado`)
+    }
+
+    const orderToBeSaved = this.ordersMapper.toEntity(updateOrderDto)
+
+    await this.returnStockOrders(orderToBeSaved)
+
+    await this.checkOrder(orderToBeSaved)
+    const orderToSave = await this.reserveStockOrders(orderToBeSaved)
+
+    orderToSave.updatedAt = new Date()
+
+    return await this.ordersRepository
+      .findByIdAndUpdate(id, orderToSave, { new: true })
+      .exec()
   }
 
-  userExists(userId: any) {
-    return false
+  /**
+   * Elimina un pedido
+   * @param id El ID del pedido
+   */
+  async remove(id: string) {
+    this.logger.log(`Eliminando pedido con id ${id}`)
+
+    const orderToDelete = await this.ordersRepository.findById(id).exec()
+    if (!orderToDelete) {
+      throw new NotFoundException(`Pedido con id ${id} no encontrado`)
+    }
+    await this.returnStockOrders(orderToDelete)
+    await this.ordersRepository.findByIdAndDelete(id).exec()
   }
+
+  /**
+   * Comprueba si existe un usuario
+   * @param userId El ID del usuario
+   */
+
+  /*async userExists(userId: number): Promise<boolean> {
+    this.logger.log(`Comprobando si existe el usuario ${userId}`)
+    const user = await this.usersRepository.findOneBy({ id: userId })
+    return !!user
+  }*/ //TODO: DO
+
+  /**
+   * Busca todos los pedidos de un usuario
+   * @param userId El ID del usuario
+   */
+  async getOrdersByUser(userId: number): Promise<Order[]> {
+    this.logger.log(`Buscando pedidos por usuario ${userId}`)
+    return await this.ordersRepository.find({ userId: userId }).exec()
+  }
+
+  /**
+   * Comprueba si un pedido es válido
+   * @param order El pedido a comprobar
+   * @private Método privado
+   */
+  private async checkOrder(order: Order): Promise<void> {
+    this.logger.log(`Comprobando pedido ${JSON.stringify(order)}`)
+    if (!order.orderLines || order.orderLines.length === 0) {
+      throw new BadRequestException(
+        'No se han agregado líneas de pedido al pedido actual',
+      )
+    }
+    //TODO: DO
+  }
+
+  //TODO: DO
 }
