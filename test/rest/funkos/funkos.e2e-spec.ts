@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import * as request from 'supertest'
-import { FunkosController } from '../../../src/funkos/controller/funkos.controller'
-import { FunkosService } from '../../../src/funkos/service/funkos.service'
+import { FunkosController } from '../../../src/funkos/./controllers/funkos.controller'
+import { FunkosService } from '../../../src/funkos/./services/funkos.service'
 import { CreateFunkoDto } from '../../../src/funkos/dto/create-funko.dto'
 import { UpdateFunkoDto } from '../../../src/funkos/dto/update-funko.dto'
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'

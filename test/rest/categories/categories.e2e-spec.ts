@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import * as request from 'supertest'
-import { CategoriesController } from '../../../src/categories/controller/categories.controller'
-import { CategoriesService } from '../../../src/categories/service/categories.service'
+import { CategoriesController } from '../../../src/categories/./controllers/categories.controller'
+import { CategoriesService } from '../../../src/categories/./services/categories.service'
 import {
   Category,
   CategoryType,

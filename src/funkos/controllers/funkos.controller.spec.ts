@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { FunkosController } from './funkos.controller'
-import { FunkosService } from '../service/funkos.service'
+import { FunkosService } from '.././services/funkos.service'
 import { CreateFunkoDto } from '../dto/create-funko.dto'
 import { UpdateFunkoDto } from '../dto/update-funko.dto'
 import { v4 as uuidv4 } from 'uuid'

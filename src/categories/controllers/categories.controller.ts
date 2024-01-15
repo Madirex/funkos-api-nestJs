@@ -10,12 +10,11 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common'
-import { CategoriesService } from '../service/categories.service'
+import { CategoriesService } from '.././services/categories.service'
 import { CreateCategoryDto } from '../dto/create-category.dto'
 import { UpdateCategoryDto } from '../dto/update-category.dto'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
-import { Category } from '../entities/category.entity'
-import {Paginate, PaginateQuery, Paginated } from 'nestjs-paginate'
+import { Paginate, PaginateQuery } from 'nestjs-paginate'
 
 /**
  * Controlador de categorías
