@@ -23,6 +23,13 @@ describe('FunkosController (e2e)', () => {
     name: 'Funko1',
     description: 'Awesome Funko',
   }
+  const testFunkos = [
+    {
+      id: testFunkoId,
+      name: 'Funko1',
+      description: 'Awesome Funko',
+    },
+  ]
 
   const createFunkoDto: CreateFunkoDto = {
     name: 'Funko1',
@@ -70,21 +77,23 @@ describe('FunkosController (e2e)', () => {
 
   describe('GET /funkos', () => {
     it('debería retornar todos los Funkos', async () => {
-      mockFunkosService.findAll.mockResolvedValue([testFunko])
+      mockFunkosService.findAll.mockResolvedValue(testFunkos)
 
+      const options = { page: 1, limit: 1 }
       const { body } = await request(app.getHttpServer())
         .get(endpoint)
+        .query(options)
         .expect(200)
 
       jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
       jest.spyOn(cacheManager, 'set').mockResolvedValue()
 
-      expect(body).toEqual([testFunko])
+      expect(body).toEqual(testFunkos)
+      expect(body).toHaveLength(options.limit)
       expect(mockFunkosService.findAll).toHaveBeenCalled()
     })
 
     it('debería retornar el resultado caché', async () => {
-      const testFunkos = [testFunko]
       jest.spyOn(cacheManager, 'get').mockResolvedValue(testFunkos)
       const result = await mockFunkosService.findAll()
       expect(result).toEqual(testFunkos)

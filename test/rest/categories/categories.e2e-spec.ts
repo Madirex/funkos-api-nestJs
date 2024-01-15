@@ -32,6 +32,15 @@ describe('CategoriesController (e2e)', () => {
       isActive: true,
       funkos: [],
     },
+    {
+      id: 2,
+      name: 'Category2',
+      createdAt: simulatedDate,
+      updatedAt: simulatedDate,
+      categoryType: CategoryType.OTHER,
+      isActive: true,
+      funkos: [],
+    },
   ]
 
   const createCategoryDto: CreateCategoryDto = {
@@ -93,8 +102,10 @@ describe('CategoriesController (e2e)', () => {
     it('debería retornar las categorías', async () => {
       mockCategoriesService.findAll.mockResolvedValue([testCategories])
 
+      const options = { page: 1, limit: 1 }
       const { body } = await request(app.getHttpServer())
         .get(endpoint)
+        .query(options)
         .expect(200)
 
       jest.spyOn(cacheManager, 'get').mockResolvedValue(Promise.resolve(null))
@@ -104,6 +115,7 @@ describe('CategoriesController (e2e)', () => {
       const receivedBodyString = JSON.stringify(body)
 
       expect(receivedBodyString).toEqual(expectedBodyString)
+      expect(body).toHaveLength(options.limit)
       expect(mockCategoriesService.findAll).toHaveBeenCalled()
     })
 
