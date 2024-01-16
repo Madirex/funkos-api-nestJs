@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { OrdersMapper } from './orders.mapper'
 import { CreateOrderDto } from '../dto/create-order.dto'
 import { Order } from '../schemas/order.schema'
+import { uuidv4 } from 'uuid'
 
 describe('OrdersMapper', () => {
   let ordersMapper: OrdersMapper
@@ -20,7 +21,7 @@ describe('OrdersMapper', () => {
 
   it('debería mapear CreateOrderDto a entidad Order', () => {
     const createOrderDto: CreateOrderDto = {
-      userId: 1,
+      userId: uuidv4(),
       client: {
         fullName: 'John Doe',
         email: 'john@example.com',

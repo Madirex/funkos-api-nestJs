@@ -140,7 +140,7 @@ export class Order {
     type: Number,
     required: true,
   })
-  userId: number
+  userId: string
 
   @Prop({
     required: true,

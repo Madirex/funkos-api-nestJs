@@ -7,7 +7,7 @@ import {
   HttpCode,
   Logger,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -72,7 +72,7 @@ export class OrdersController {
    * @param userId El id del usuario
    */
   @Get('user/:userId')
-  async findOrdersByUser(@Param('userId', ParseIntPipe) userId: number) {
+  async findOrdersByUser(@Param('userId', ParseUUIDPipe) userId: string) {
     this.logger.log(`Buscando pedidos por user ${userId}`)
     return await this.ordersService.findByUserId(userId)
   }

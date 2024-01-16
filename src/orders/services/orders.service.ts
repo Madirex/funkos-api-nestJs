@@ -13,6 +13,7 @@ import { Repository } from 'typeorm'
 import { OrdersMapper } from '../mappers/orders.mapper'
 import { CreateOrderDto } from '../dto/create-order.dto'
 import { UpdateOrderDto } from '../dto/update-order.dto'
+import { User } from '../../users/entities/user.entity'
 
 export const OrdersOrderByValues: string[] = ['_id', 'userId']
 export const OrdersOrderValues: string[] = ['asc', 'desc']
@@ -28,6 +29,7 @@ export class OrdersService {
    * Inicializa el servicio de pedidos
    * @param ordersRepository El repositorio de pedidos
    * @param funkosRepository El repositorio de funkos
+   * @param usersRepository El repositorio de usuarios
    * @param ordersMapper El mapeador de pedidos
    */
   constructor(
@@ -35,6 +37,8 @@ export class OrdersService {
     private ordersRepository: PaginateModel<OrderDocument>,
     @InjectRepository(Funko)
     private readonly funkosRepository: Repository<Funko>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly ordersMapper: OrdersMapper,
   ) {}
 
@@ -83,7 +87,7 @@ export class OrdersService {
    * Busca todos los pedidos de un usuario
    * @param userId El ID del usuario
    */
-  async findByUserId(userId: number) {
+  async findByUserId(userId: string) {
     this.logger.log(`Buscando pedidos por usuario ${userId}`)
     return await this.ordersRepository.find({ userId: userId }).exec()
   }
@@ -156,17 +160,17 @@ export class OrdersService {
    * @param userId El ID del usuario
    */
 
-  /*async userExists(userId: number): Promise<boolean> {
+  async userExists(userId: string): Promise<boolean> {
     this.logger.log(`Comprobando si existe el usuario ${userId}`)
     const user = await this.usersRepository.findOneBy({ id: userId })
     return !!user
-  }*/ //TODO: DO
+  }
 
   /**
    * Busca todos los pedidos de un usuario
    * @param userId El ID del usuario
    */
-  async getOrdersByUser(userId: number): Promise<Order[]> {
+  async getOrdersByUser(userId: string): Promise<Order[]> {
     this.logger.log(`Buscando pedidos por usuario ${userId}`)
     return await this.ordersRepository.find({ userId: userId }).exec()
   }

@@ -8,6 +8,7 @@ import { Funko } from '../funkos/entities/funko.entity'
 import { OrdersController } from './controllers/orders.controller'
 import { OrdersService } from './services/orders.service'
 import { OrdersMapper } from './mappers/orders.mapper'
+import { User } from '../users/entities/user.entity'
 
 /**
  * @description The Orders Module
@@ -25,6 +26,7 @@ import { OrdersMapper } from './mappers/orders.mapper'
       },
     ]),
     TypeOrmModule.forFeature([Funko]),
+    TypeOrmModule.forFeature([User]),
     CacheModule.register(),
   ],
   controllers: [OrdersController],

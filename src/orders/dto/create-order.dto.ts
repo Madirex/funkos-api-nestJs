@@ -104,9 +104,9 @@ export class OrderLineDto {
  * @description Data transfer object for creating an order
  */
 export class CreateOrderDto {
-  @IsNumber({}, { message: 'El ID del usuario debe ser un número' })
+  @IsUUID('4', { message: 'El ID del usuario debe ser un UUID' })
   @IsNotEmpty({ message: 'El ID del usuario no debe estar vacío' })
-  userId: number
+  userId: string
 
   @IsNotEmpty({ message: 'El cliente no debe estar vacío' })
   @ValidateNested({ each: true })
