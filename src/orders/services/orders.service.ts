@@ -183,8 +183,78 @@ export class OrdersService {
         'No se han agregado líneas de pedido al pedido actual',
       )
     }
-    //TODO: DO
+
+    for (const orderLine of order.orderLines) {
+      const funko = await this.funkosRepository.findOneBy({
+        id: orderLine.productId,
+      })
+      if (!funko) {
+        throw new BadRequestException(
+          `El Funko con id ${orderLine.productId} no existe`,
+        )
+      }
+      if (funko.stock < orderLine.stock && orderLine.stock > 0) {
+        throw new BadRequestException(
+          `La cantidad solicitada no es válida o no hay suficiente stock del Funko ${funko.id}`,
+        )
+      }
+      if (funko.price !== orderLine.productPrice) {
+        throw new BadRequestException(
+          `El precio del Funko ${funko.id} en el pedido no coincide con el precio actual del Funko`,
+        )
+      }
+    }
   }
 
-  //TODO: DO
+  /**
+   * Reserva el stock de un pedido
+   * @param order El pedido a reservar
+   * @private Método privado
+   */
+  private async reserveStockOrders(order: Order): Promise<Order> {
+    this.logger.log(`Reservando stock del pedido: ${order}`)
+
+    if (!order.orderLines || order.orderLines.length === 0) {
+      throw new BadRequestException(`No se han agregado lineas de pedidos`)
+    }
+
+    for (const orderLine of order.orderLines) {
+      const funko = await this.funkosRepository.findOneBy({
+        id: orderLine.productId,
+      })
+      funko.stock -= orderLine.stock
+      await this.funkosRepository.save(funko)
+      orderLine.total = orderLine.stock * orderLine.productPrice
+    }
+
+    order.total = order.orderLines.reduce(
+      (sum, orderLine) => sum + orderLine.stock * orderLine.productPrice,
+      0,
+    )
+    order.totalItems = order.orderLines.reduce(
+      (sum, orderLine) => sum + orderLine.stock,
+      0,
+    )
+
+    return order
+  }
+
+  /**
+   * Devuelve el stock de un pedido
+   * @param order El pedido a devolver
+   * @private Método privado
+   */
+  private async returnStockOrders(order: Order): Promise<Order> {
+    this.logger.log(`Retornando stock del pedido: ${order}`)
+    if (order.orderLines) {
+      for (const orderLine of order.orderLines) {
+        const funko = await this.funkosRepository.findOneBy({
+          id: orderLine.productId,
+        })
+        funko.stock += orderLine.stock
+        await this.funkosRepository.save(funko)
+      }
+    }
+    return order
+  }
 }

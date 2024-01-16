@@ -93,10 +93,10 @@ export class Client {
  */
 export class OrderLine {
   @Prop({
-    type: Number,
+    type: String,
     required: true,
   })
-  productId: number
+  productId: string
 
   @Prop({
     type: Number,
@@ -114,7 +114,7 @@ export class OrderLine {
     type: Number,
     required: true,
   })
-  quantity: number
+  total: number
 }
 
 /**
@@ -156,7 +156,7 @@ export class Order {
   totalItems: number
 
   @Prop()
-  quantity: number
+  total: number
 
   @Prop({ default: Date.now })
   createdAt: Date

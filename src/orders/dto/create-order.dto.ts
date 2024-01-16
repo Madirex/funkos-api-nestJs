@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
   MaxLength,
   Min,
 } from 'class-validator'
@@ -69,9 +70,9 @@ export class ClientDto {
  * @description Data transfer object for creating an order line
  */
 export class OrderLineDto {
-  @IsNumber()
+  @IsUUID()
   @IsNotEmpty()
-  productId: number
+  productId: string
 
   @IsNumber()
   @IsNotEmpty()
@@ -86,7 +87,7 @@ export class OrderLineDto {
   @IsNumber()
   @IsNotEmpty()
   @Min(0, { message: 'La cantidad debe ser mayor que 0' })
-  quantity: number
+  total: number
 }
 
 /**

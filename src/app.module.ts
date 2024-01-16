@@ -9,7 +9,7 @@ import { CategoriesNotificationsGateway } from './websockets/notifications/categ
 import { CacheModule } from '@nestjs/cache-manager'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
-import { OrdersModule } from './orders/orders.module';
+import { OrdersModule } from './orders/orders.module'
 
 /**
  * Módulo principal de la aplicación
