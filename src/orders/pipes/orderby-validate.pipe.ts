@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
-import { OrdersOrderValues } from '../services/orders.service'
+import { OrdersOrderByValues } from '../services/orders.service'
 
 /**
  * Pipe que verifica si el pedido especificado es válido
@@ -11,10 +11,10 @@ export class OrderByValidatePipe implements PipeTransform {
    * @param value El valor a transformar
    */
   transform(value: any) {
-    value = value || OrdersOrderValues[0]
-    if (!OrdersOrderValues.includes(value)) {
+    value = value || OrdersOrderByValues[0]
+    if (!OrdersOrderByValues.includes(value)) {
       throw new BadRequestException(
-        `No se ha especificado un pedido válido: ${OrdersOrderValues.join(
+        `No se ha especificado un pedido válido: ${OrdersOrderByValues.join(
           ', ',
         )}`,
       )

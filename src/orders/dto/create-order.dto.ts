@@ -6,39 +6,45 @@ import {
   IsUUID,
   MaxLength,
   Min,
+  ValidateNested,
 } from 'class-validator'
+import { Type } from 'class-transformer'
 
 /**
  * @description Data transfer object for creating an address
  */
 export class AddressDto {
   @IsString({ message: 'La calle debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'La calle debe tener menos de 100 caracteres' })
   @IsNotEmpty({ message: 'La calle no debe estar vacía' })
   street: string
 
   @IsString({ message: 'El número debe ser un texto' })
-  @MaxLength(50)
+  @MaxLength(50, { message: 'El número debe tener menos de 50 caracteres' })
   @IsNotEmpty({ message: 'El número no debe estar vacío' })
   number: string
 
   @IsString({ message: 'La ciudad debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'La ciudad debe tener menos de 100 caracteres' })
   @IsNotEmpty({ message: 'La ciudad no debe estar vacía' })
   city: string
 
   @IsString({ message: 'La provincia debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, {
+    message: 'La provincia debe tener menos de 100 caracteres',
+  })
   @IsNotEmpty({ message: 'La provincia no debe estar vacía' })
   province: string
 
   @IsString({ message: 'El país debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'El país debe tener menos de 100 caracteres' })
   @IsNotEmpty({ message: 'El país no debe estar vacío' })
   country: string
 
   @IsString({ message: 'El código postal debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, {
+    message: 'El código postal debe tener menos de 100 caracteres',
+  })
   @IsNotEmpty({ message: 'El código postal no debe estar vacío' })
   postalCode: string
 }
@@ -48,21 +54,25 @@ export class AddressDto {
  */
 export class ClientDto {
   @IsString({ message: 'El nombre completo debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, {
+    message: 'El nombre completo debe tener menos de 100 caracteres',
+  })
   @IsNotEmpty({ message: 'El nombre completo no debe estar vacío' })
   fullName: string
 
   @IsString({ message: 'El email debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'El email debe tener menos de 100 caracteres' })
   @IsEmail({}, { message: 'El email debe ser un email válido' })
   email: string
 
   @IsString({ message: 'El teléfono debe ser un texto' })
-  @MaxLength(100)
+  @MaxLength(100, { message: 'El teléfono debe tener menos de 100 caracteres' })
   @IsNotEmpty({ message: 'El teléfono no debe estar vacío' })
   phone: string
 
   @IsNotEmpty({ message: 'La dirección no debe estar vacía' })
+  @ValidateNested({ each: true })
+  @Type(() => AddressDto)
   address: AddressDto
 }
 
@@ -88,11 +98,6 @@ export class OrderLineDto {
   @IsNotEmpty({ message: 'El stock no debe estar vacío' })
   @Min(1, { message: 'El stock debe ser mayor que 0' })
   stock: number
-
-  @IsNumber({}, { message: 'El total debe ser un número' })
-  @IsNotEmpty({ message: 'El total no debe estar vacío' })
-  @Min(0, { message: 'La cantidad debe ser mayor que 0' })
-  total: number
 }
 
 /**
@@ -104,8 +109,12 @@ export class CreateOrderDto {
   userId: number
 
   @IsNotEmpty({ message: 'El cliente no debe estar vacío' })
+  @ValidateNested({ each: true })
+  @Type(() => ClientDto)
   client: ClientDto
 
   @IsNotEmpty({ message: 'Las líneas de pedido no deben estar vacías' })
+  @ValidateNested({ each: true })
+  @Type(() => OrderLineDto)
   orderLines: OrderLineDto[]
 }

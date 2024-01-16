@@ -53,7 +53,7 @@ export class FunkosNotificationsGateway {
    * @private Método privado
    */
   private handleDisconnect(client: Socket) {
-    console.log('Cliente desconectado:', client.id)
+    this.logger.log('Cliente desconectado:', client.id)
     this.logger.debug('Cliente desconectado:', client.id)
   }
 }

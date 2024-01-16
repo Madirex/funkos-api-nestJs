@@ -127,7 +127,6 @@ export class FunkosService {
     // Caché
     const cache: ResponseFunkoDto = await this.cacheManager.get(`funko_${id}`)
     if (cache) {
-      console.log('Cache hit')
       this.logger.log('Cache hit')
       return cache
     }

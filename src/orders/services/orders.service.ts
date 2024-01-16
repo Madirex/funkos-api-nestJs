@@ -222,6 +222,7 @@ export class OrdersService {
       const funko = await this.funkosRepository.findOneBy({
         id: orderLine.productId,
       })
+
       funko.stock -= orderLine.stock
       await this.funkosRepository.save(funko)
       orderLine.total = orderLine.stock * orderLine.productPrice
