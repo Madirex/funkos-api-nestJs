@@ -5,7 +5,7 @@ import { OrdersOrderValues } from '../services/orders.service'
  * Pipe que verifica si el pedido especificado es válido
  */
 @Injectable()
-export class OrderValidatePipe implements PipeTransform {
+export class OrderByValidatePipe implements PipeTransform {
   /**
    * Verifica si el pedido especificado es válido
    * @param value El valor a transformar
