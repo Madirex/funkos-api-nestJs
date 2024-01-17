@@ -1,0 +1,2318 @@
+{
+	"info": {
+		"_postman_id": "872b6e2a-11e5-4bf3-b5c1-5517346f25dd",
+		"name": "NEST - Funkos API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11601885"
+	},
+	"item": [
+		{
+			"name": "Funkos",
+			"item": [
+				{
+					"name": "🔴 Casos incorrectos",
+					"item": [
+						{
+							"name": "Post Funko - No Data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos",
+									"host": [
+										"{{url}}funkos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Funko - No Data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/4802910a-16c0-4c99-8500-0014d1410379",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"4802910a-16c0-4c99-8500-0014d1410379"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Funko - Bad Id Number",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/48",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"48"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Funko - Bad Id No UUID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/asd",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"asd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Funko - Bad price & quantity",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ejemplo nombre\",\r\n    \"price\": -1,\r\n    \"quantity\": -1,\r\n    \"image\": \"https://www.madirex.com/favicon.ico\",\r\n    \"category\": \"Ejemplo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}funkos",
+									"host": [
+										"{{url}}funkos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Funko - Max Characters Limit",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123452\",\r\n    \"price\": 1000000.000001,\r\n    \"stock\": 1000001,\r\n    \"image\": \"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123452123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345212345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234521234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890124\",\r\n    \"category\": \"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123452\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}funkos",
+									"host": [
+										"{{url}}funkos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindById - Bad Id Number",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/1",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindById - Bad Id No UUID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/asd",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"asd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete - Bad Id Number",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/3",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete - Bad Id No UUID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}funkos/asd",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"asd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Image Max Size",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/madir/Desktop/BIG.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}funkos/image/5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"image",
+										"5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Image Empty",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}funkos/image/5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"image",
+										"5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Image Multiple Images",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": [
+												"/C:/Users/madir/Pictures/Art Madirex NEW.png",
+												"/C:/Users/madir/Pictures/Art Madirex.png"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}funkos/image/5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2",
+									"host": [
+										"{{url}}funkos"
+									],
+									"path": [
+										"image",
+										"5dd56c24-e6cc-43c6-a54d-0ef5c01ea8b2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}funkos?page=0&limit=20&sortBy=name:ASC",
+							"host": [
+								"{{url}}funkos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "name:ASC"
+								},
+								{
+									"key": "filter.price",
+									"value": "$btw:1,50",
+									"disabled": true
+								},
+								{
+									"key": "filter.name",
+									"value": "$ilike:Ejemplo Nombre",
+									"disabled": true
+								},
+								{
+									"key": "filter.name",
+									"value": "$eq: Ejemplo nombre",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}funkos/1d97f018-dff2-4f7c-82b7-0217b113b18d",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"1d97f018-dff2-4f7c-82b7-0217b113b18d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Image",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/madir/Pictures/dOBv7kY.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}funkos/image/1d97f018-dff2-4f7c-82b7-0217b113b18d",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"image",
+								"1d97f018-dff2-4f7c-82b7-0217b113b18d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Funko",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombrasdasde22                   \",\r\n    \"price\": 42.2,\r\n    \"stock\": 66 ,\r\n    \"image\": \"                        https://www.madirex.com/favicon.ico                      \",\r\n    \"category\": \"ejemplO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}funkos",
+							"host": [
+								"{{url}}funkos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Funko - Only Basic Data Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombre2dsasdffrsdsg                   \"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}funkos",
+							"host": [
+								"{{url}}funkos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Funko - Update All Without Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombre32d                   \",\r\n    \"price\": 42.2,\r\n    \"quantity\": 1 ,\r\n    \"image\": \"                        https://www.madirex.com/favicon.ico                      \"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}funkos/0f8c971d-79a2-4ea3-b9b8-86a1443963ab",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"0f8c971d-79a2-4ea3-b9b8-86a1443963ab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Funko - Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombre                  \",\r\n    \"price\": 42.2,\r\n    \"quantity\": 1 ,\r\n    \"image\": \"                        https://www.madirex.com/favicon.ico                      \",\r\n    \"category\": \"ejempsdsdlo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}funkos/317d4701-589f-4ae1-9e24-fbe30038c9b8",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"317d4701-589f-4ae1-9e24-fbe30038c9b8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Funko - Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": \"ejemplo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}funkos/0f8c971d-79a2-4ea3-b9b8-86a1443963ab",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"0f8c971d-79a2-4ea3-b9b8-86a1443963ab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Funko",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}funkos/0f8c971d-79a2-4ea3-b9b8-86a1443963ab",
+							"host": [
+								"{{url}}funkos"
+							],
+							"path": [
+								"0f8c971d-79a2-4ea3-b9b8-86a1443963ab"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "🔴 Casos incorrectos",
+					"item": [
+						{
+							"name": "FindById Not Valid ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/1asdasd",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"1asdasd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Category Empty Data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}categories",
+									"host": [
+										"{{url}}categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Category Bad ID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}categories/asdad",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"asdad"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Category Long ID number",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"                 Ejemplo nombre Editado4                   \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}categories/109999999999999999999999999999999999999999999999999999999999",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"109999999999999999999999999999999999999999999999999999999999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Category ID 0",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"                 Ejemplo nombre Editado4                   \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}categories/0",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category Bad ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/asdasd",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"asdasd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Category > 255 characters",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123452\",\r\n    \"categoryType\": \"SERIES\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}categories",
+									"host": [
+										"{{url}}categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindById Long number",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/13333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"13333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindById is 0",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/0",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category Long Number",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/1999999999999999999999999999999999999999999999999999999999999999999999",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"1999999999999999999999999999999999999999999999999999999999999999999999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category ID 0",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}categories/0",
+									"host": [
+										"{{url}}categories"
+									],
+									"path": [
+										"0"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}categories?page=1&limit=20&sortBy=name:ASC&filter.isActive=$eq:true&filter.name=$ilike:ejemplo",
+							"host": [
+								"{{url}}categories"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "name:ASC"
+								},
+								{
+									"key": "filter.isActive",
+									"value": "$eq:true"
+								},
+								{
+									"key": "filter.name",
+									"value": "$ilike:ejemplo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}categories/1",
+							"host": [
+								"{{url}}categories"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"             ejemplo4df5             \",\r\n    \"categoryType\": \"SERIES\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}categories",
+							"host": [
+								"{{url}}categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Category Full Edit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombre Editado                   \",\r\n    \"categoryType\": \"OTHER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}categories/1",
+							"host": [
+								"{{url}}categories"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Category Partial Edit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"                 Ejemplo nombre Editado4                   \"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}categories/1",
+							"host": [
+								"{{url}}categories"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}categories/1",
+							"host": [
+								"{{url}}categories"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Casos incorrectos",
+					"item": [
+						{
+							"name": "Sin elementos para procesar",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 2,\r\n    \"client\": {\r\n    },\r\n    \"orderLines\":[\r\n    ],\r\n    \"userId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Errores nulos",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Datos del cliente nulos",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 2,\r\n    \"client\": {\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \r\n        }\r\n    ],\r\n    \"userId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto con ID no válida",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"cp\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": 234,\r\n            \"city\": 234\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": 234\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": 234,\r\n            \"productPrice\": 23\r\n        }\r\n    ],\r\n    \"userId\": 1,\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto con ID no válida Copy",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"cp\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": 234,\r\n            \"city\": 234\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": 234\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": 234,\r\n            \"productPrice\": 23\r\n        }\r\n    ],\r\n    \"userId\": 1,\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto no tiene precio válido o no coincide",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"cp\": \"13434\"\r\n        }\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"9882a6d0-0d85-41c4-a464-219418174edc\"\r\n        }\r\n    ],\r\n    \"userId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Email no válido y country y province caracteres",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"cp\": \"13434\",\r\n            \"country\": 34,\r\n            \"province\": 32,\r\n            \"street\": 234,\r\n            \"city\": 234\r\n        },\r\n        \"email\": \"34\",\r\n        \"fullName\": 234\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"01e71601-e3fe-4ca9-b151-6ff94c3fe8e3\",\r\n            \"productPrice\": 23\r\n        }\r\n    ],\r\n    \"userId\": 1,\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders",
+									"host": [
+										"{{url}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Empty values",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"address\":{\r\n        }\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders/655a54c83f761d101f941f4e",
+									"host": [
+										"{{url}}orders"
+									],
+									"path": [
+										"655a54c83f761d101f941f4e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto con ID no válida",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 1,\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"cp\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": 234,\r\n            \"city\": 234\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": 234\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": 234,\r\n            \"productPrice\": 23\r\n        }\r\n    ],\r\n    \"userId\": 1,\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}orders/655a59d28d33633b5d2be7c8",
+									"host": [
+										"{{url}}orders"
+									],
+									"path": [
+										"655a59d28d33633b5d2be7c8"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders?page=1&limit=2&orderBy=userId&order=asc",
+							"host": [
+								"{{url}}orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "userId"
+								},
+								{
+									"key": "order",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders/65a6af18ab6f863e6245a2af",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								"65a6af18ab6f863e6245a2af"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"543cc80d-00df-4dba-885e-cbccc5400acf\",\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"postalCode\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": \"234\",\r\n            \"city\": \"234\"\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": \"234\"\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"16a19c58-f291-452e-98bb-e1268ac44673\",\r\n            \"productPrice\": 42.2,\r\n            \"stock\": 1\r\n        }\r\n    ],\r\n    \"total\": 23\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}orders",
+							"host": [
+								"{{url}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"543cc80d-00df-4dba-885e-cbccc5400acf\",\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"postalCode\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": \"234\",\r\n            \"city\": \"234\"\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": \"234\"\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"16a19c58-f291-452e-98bb-e1268ac44673\",\r\n            \"productPrice\": 42.2,\r\n            \"stock\": 1\r\n        }\r\n    ],\r\n    \"total\": 23\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}orders/65a8057646e2d3b06f943e66",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								"65a8057646e2d3b06f943e66"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}orders/65a8057646e2d3b06f943e66",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								"65a8057646e2d3b06f943e66"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Casos incorrectos",
+					"item": [
+						{
+							"name": "Post",
+							"item": [
+								{
+									"name": "Unsupported Media Type",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n}"
+										},
+										"url": {
+											"raw": "{{url}}users",
+											"host": [
+												"{{url}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad Request Json parse Roles",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": -223432,\r\n    \"surname\": -23424,\r\n    \"username\": -2342324,\r\n    \"email\": -234,\r\n    \"password\": -1,\r\n    \"roles\": -1,\r\n    \"isDeleted\": -1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users",
+											"host": [
+												"{{url}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad email and password",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": -223432,\r\n    \"surname\": -23424,\r\n    \"username\": -2342324,\r\n    \"email\": -234,\r\n    \"password\": -1,\r\n    \"roles\": [0],\r\n    \"isDeleted\": -1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users",
+											"host": [
+												"{{url}}users"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Put",
+							"item": [
+								{
+									"name": "Unsupported Media Type",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n}"
+										},
+										"url": {
+											"raw": "{{url}}users/sadsa",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"sadsa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad Request Json parse Roles",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": -223432,\r\n    \"surname\": -23424,\r\n    \"username\": -2342324,\r\n    \"email\": -234,\r\n    \"password\": -1,\r\n    \"roles\": -1,\r\n    \"isDeleted\": -1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/asd",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"asd"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad email and password",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": -223432,\r\n    \"surname\": -23424,\r\n    \"username\": -2342324,\r\n    \"email\": -234,\r\n    \"password\": -1,\r\n    \"roles\": [0],\r\n    \"isDeleted\": -1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/dfs",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"dfs"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "/me/profile",
+							"item": [
+								{
+									"name": "Usuario NULL (Not Logged)",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Madirex\",\r\n    \"surname\": \"Madirex\",\r\n    \"username\": \"Land\",\r\n    \"email\": \"contact@madirex.com\",\r\n    \"password\": \"4'9fj04g03h0\",\r\n    \"roles\": [0,1],\r\n    \"isDeleted\": 0\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/profile",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User already exists",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Madirex\",\r\n    \"surname\": \"Madirex\",\r\n    \"username\": \"Land\",\r\n    \"email\": \"contact@madirex.com\",\r\n    \"password\": \"4'9fj04g03h0\",\r\n    \"roles\": [0,1],\r\n    \"isDeleted\": 0\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/profile",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"profile"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "/me/orders",
+							"item": [
+								{
+									"name": "Formato consulta incorrecta",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{url}}users/me/orders",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Unsupported Media Type",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n}"
+										},
+										"url": {
+											"raw": "{{url}}users/me/orders",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "empty data",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/orders",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "fails when user tries to modify another user",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\":\"a2bcb7b3-4c36-4073-9ab8-9d8f4a57301b\",\r\n    \"client\":{\r\n        \"phone\": 234324,\r\n        \"address\": {\r\n            \"country\": -234,\r\n            \"province\": -23,\r\n            \"cp\": \"45345\",\r\n            \"street\": -23,\r\n            \"city\": -23,\r\n            \"number\": \"dfgdfgfdg-0\"\r\n        },\r\n        \"email\": \"client@madirex.com\",\r\n        \"fullName\": -342\r\n    },\r\n    \"orderLineList\":[\r\n        \r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/orders",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "without items to process",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\":\"d4515840-8fe2-4107-8bde-0f1c545ef4c5\",\r\n    \"client\":{\r\n        \"phone\": 234324,\r\n        \"address\": {\r\n            \"country\": -234,\r\n            \"province\": -23,\r\n            \"cp\": \"45345\",\r\n            \"street\": -23,\r\n            \"city\": -23,\r\n            \"number\": \"dfgdfgfdg-0\"\r\n        },\r\n        \"email\": \"client@madirex.com\",\r\n        \"fullName\": -342\r\n    },\r\n    \"orderLineList\":[\r\n        \r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/orders",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "fails when user tries to modify another user",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\":\"d4515840-8fe2-4107-8bde-0f1c545ef4c2\",\r\n    \"client\":{\r\n        \"phone\": 234324,\r\n        \"address\": {\r\n            \"country\": -234,\r\n            \"province\": -23,\r\n            \"cp\": \"45345\",\r\n            \"street\": -23,\r\n            \"city\": -23,\r\n            \"number\": \"dfgdfgfdg-0\"\r\n        },\r\n        \"email\": \"client@madirex.com\",\r\n        \"fullName\": -342\r\n    },\r\n    \"orderLineList\":[\r\n        {\r\n            \"productId\": \"8919f2e4-193b-4928-b4d4-5e5fb88653e7\",\r\n            \"productPrice\": 29.99,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}users/me/orders/6561d787fa4e216b1c4ded1f",
+											"host": [
+												"{{url}}users"
+											],
+											"path": [
+												"me",
+												"orders",
+												"6561d787fa4e216b1c4ded1f"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "me/profile",
+					"item": [
+						{
+							"name": "My profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}users/me/profile",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "My profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Madirex2\",\r\n    \"surname\": \"Madirex2\",\r\n    \"username\": \"Madiland2\",\r\n    \"email\": \"contact2s@madirex.com\",\r\n    \"password\": \"49fj04g03h0asdasdA\",\r\n    \"isDeleted\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}users/me/profile",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "My profile",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Madirex\",\r\n    \"surname\": \"Madirex\",\r\n    \"email\": \"contact2@madirex.com\",\r\n    \"password\": \"4'9fj04g03h0\",\r\n    \"roles\": [0,1],\r\n    \"isDeleted\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}users/me/profile",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "me/orders",
+					"item": [
+						{
+							"name": "My orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}users/me/orders",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}users/me/orders/65a80e7c5a157d10ed9800ee",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"orders",
+										"65a80e7c5a157d10ed9800ee"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"543cc80d-00df-4dba-885e-cbccc5400acf\",\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"postalCode\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": \"234\",\r\n            \"city\": \"234\"\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": \"234\"\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"3977c795-d5e0-4a18-85fa-0462b87a5f2f\",\r\n            \"productPrice\": 42.2,\r\n            \"stock\": 1\r\n        }\r\n    ],\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}users/me/orders",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"543cc80d-00df-4dba-885e-cbccc5400acf\",\r\n    \"client\": {\r\n        \"phone\" : \"asd\",\r\n        \"address\":{\r\n            \"number\": \"sad\",\r\n            \"postalCode\": \"13434\",\r\n            \"country\": \"dsfsd\",\r\n            \"province\": \"3asd2\",\r\n            \"street\": \"234\",\r\n            \"city\": \"234\"\r\n        },\r\n        \"email\": \"madirexland@gmail.com\",\r\n        \"fullName\": \"234\"\r\n    },\r\n    \"orderLines\":[\r\n        {\r\n            \"productId\": \"3977c795-d5e0-4a18-85fa-0462b87a5f2f\",\r\n            \"productPrice\": 42.2,\r\n            \"stock\": 1\r\n        }\r\n    ],\r\n    \"total\": 23\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}users/me/orders/65a80e495a157d10ed9800e4",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"orders",
+										"65a80e495a157d10ed9800e4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}users/me/orders/65a80e495a157d10ed9800e4",
+									"host": [
+										"{{url}}users"
+									],
+									"path": [
+										"me",
+										"orders",
+										"65a80e495a157d10ed9800e4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users?page=0&size=4&sortBy=id&direction=asc&isDeleted=false",
+							"host": [
+								"{{url}}users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "4"
+								},
+								{
+									"key": "sortBy",
+									"value": "id"
+								},
+								{
+									"key": "direction",
+									"value": "asc"
+								},
+								{
+									"key": "isDeleted",
+									"value": "false"
+								},
+								{
+									"key": "email",
+									"value": "contact@madirex.com",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "Madirex",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users/7b0cc542-c14a-443d-811c-94cc8acc7c40",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"7b0cc542-c14a-443d-811c-94cc8acc7c40"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Madirex2\",\r\n    \"surnames\": \"Madirex2\",\r\n    \"username\": \"Land2\",\r\n    \"email\": \"contact23@madirex.com\",\r\n    \"password\": \"49fj04g03h0A\",\r\n    \"roles\": [0,1],\r\n    \"isDeleted\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Madirex\",\r\n    \"surname\": \"Madirex\",\r\n    \"username\": \"Land\",\r\n    \"email\": \"contact33@madirex.com\",\r\n    \"password\": \"49fj04g03h0A\",\r\n    \"roles\": [0,1],\r\n    \"isDeleted\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}users/81e65c4e-516c-46f9-88fe-62624078fc07",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"81e65c4e-516c-46f9-88fe-62624078fc07"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Casos incorrectos",
+					"item": [
+						{
+							"name": "SignIn Empty Data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signin",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignIn - User Not Found",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"User\",\r\n    \"password\": \"123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signin",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignUp - User Already Exists",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"Madirex\",\r\n    \"surname\": \"García\",\r\n    \"name\": \"Manolo\",\r\n    \"email\": \"manolillogarsia52@madirex.com\",\r\n    \"password\": \"manolo54\",\r\n    \"passwordRepeat\": \"manolo54\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signup",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignUp - Email Already Exists Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"fg345ghghrth\",\r\n    \"surname\": \"García\",\r\n    \"name\": \"Manolo\",\r\n    \"email\": \"contact@madirex.com\",\r\n    \"password\": \"manolo54\",\r\n    \"passwordRepeat\": \"manolo54\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signup",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignUp - Invalid Email",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": -45764574574574,\r\n    \"surname\": -45764574574574,\r\n    \"name\": -45764574574574,\r\n    \"email\": -45764574574574,\r\n    \"password\": -45764574574574,\r\n    \"passwordRepeat\": -45764574574574\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signup",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignUp - Empty",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}auth/signup",
+									"host": [
+										"{{url}}auth"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SignIn User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"passsword123A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}auth/signin",
+							"host": [
+								"{{url}}auth"
+							],
+							"path": [
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignIn Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"passsword123A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}auth/signin",
+							"host": [
+								"{{url}}auth"
+							],
+							"path": [
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Manolo5fss4fd3ss\",\r\n    \"surnames\": \"García\",\r\n    \"name\": \"Manolo\",\r\n    \"email\": \"manolillogarsssfsia52sf2@madirex.com\",\r\n    \"password\": \"passsword123A\",\r\n    \"passwordRepeat\": \"passsword123A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}auth/signup",
+							"host": [
+								"{{url}}auth"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://localhost:3000/v1/"
+		}
+	]
+}
