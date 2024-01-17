@@ -33,8 +33,6 @@ export class UserExistsGuard implements CanActivate {
       throw new BadRequestException('El id del usuario es obligatorio')
     }
 
-    console.log(userId)
-
     if (!isNaN(userId)) {
       throw new BadRequestException('El id del usuario no es válido')
     }

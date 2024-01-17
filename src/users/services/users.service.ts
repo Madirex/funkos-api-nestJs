@@ -222,8 +222,6 @@ export class UsersService {
    */
   async getOrder(idUser: string, idOrder: string) {
     const order = await this.ordersService.findOne(idOrder)
-    console.log(order.userId)
-    console.log(idUser)
     if (order.userId != idUser) {
       throw new ForbiddenException(
         'No tienes permiso para acceder a este recurso',
