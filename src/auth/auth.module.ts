@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt'
 import * as process from 'process'
 import { PassportModule } from '@nestjs/passport'
 import { JwtAuthStrategy } from './strategies/jwt-strategy'
-import { AuthMapper } from './mappers/users-mapper'
+import { AuthMapper } from './mappers/auth.mapper'
 
 /**
  * @description Módulo de autenticación

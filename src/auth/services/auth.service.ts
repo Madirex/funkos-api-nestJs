@@ -8,7 +8,7 @@ import { UserSignUpDto } from '../dto/user-sign.up.dto'
 import { UserSignInDto } from '../dto/user-sign.in.dto'
 import { UsersService } from '../../users/services/users.service'
 import { JwtService } from '@nestjs/jwt'
-import { AuthMapper } from '../mappers/users-mapper'
+import { AuthMapper } from '../mappers/auth.mapper'
 
 /**
  * @description Servicio de autenticación
