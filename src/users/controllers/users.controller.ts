@@ -13,15 +13,15 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { UsersService } from './users.service'
+import { UsersService } from '../services/users.service'
 import { CacheInterceptor } from '@nestjs/cache-manager'
-import { CreateUserDto } from './dto/create-user.dto'
-import { Roles, RolesAuthGuard } from '../auth/guards/roles-auth.guard'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { IdValidatePipe } from '../orders/pipes/id-validate.pipe'
-import { CreateOrderDto } from '../orders/dto/create-order.dto'
-import { UpdateOrderDto } from '../orders/dto/update-order.dto'
+import { CreateUserDto } from '../dto/create-user.dto'
+import { Roles, RolesAuthGuard } from '../../auth/guards/roles-auth.guard'
+import { UpdateUserDto } from '../dto/update-user.dto'
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
+import { IdValidatePipe } from '../../orders/pipes/id-validate.pipe'
+import { CreateOrderDto } from '../../orders/dto/create-order.dto'
+import { UpdateOrderDto } from '../../orders/dto/update-order.dto'
 import { ApiExcludeController } from '@nestjs/swagger'
 
 /**

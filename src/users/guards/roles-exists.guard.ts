@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
-import { UsersService } from '../users.service'
+import { UsersService } from '../services/users.service'
 
 /**
  * @description Guard para verificar que los roles de un usuario existen

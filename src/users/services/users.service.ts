@@ -7,15 +7,15 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { User } from './entities/user.entity'
-import { UsersMapper } from './mappers/users.mapper'
-import { CreateUserDto } from './dto/create-user.dto'
-import { Role, UserRole } from './entities/user-role.entity'
-import { BcryptService } from './bcrypt.service'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { CreateOrderDto } from '../orders/dto/create-order.dto'
-import { UpdateOrderDto } from '../orders/dto/update-order.dto'
-import { OrdersService } from '../orders/services/orders.service'
+import { User } from '../entities/user.entity'
+import { UsersMapper } from '../mappers/users.mapper'
+import { CreateUserDto } from '../dto/create-user.dto'
+import { Role, UserRole } from '../entities/user-role.entity'
+import { BcryptService } from '../bcrypt.service'
+import { UpdateUserDto } from '../dto/update-user.dto'
+import { CreateOrderDto } from '../../orders/dto/create-order.dto'
+import { UpdateOrderDto } from '../../orders/dto/update-order.dto'
+import { OrdersService } from '../../orders/services/orders.service'
 import { v4 as uuidv4 } from 'uuid'
 
 /**
@@ -195,6 +195,7 @@ export class UsersService {
       const userRoles = roles.map((role) => ({
         user: user,
         role: Role[role],
+        id: uuidv4(),
       }))
       user.roles = await this.userRoleRepository.save(userRoles)
     } else {
