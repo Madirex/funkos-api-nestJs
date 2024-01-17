@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { OrdersMapper } from './orders.mapper'
 import { CreateOrderDto } from '../dto/create-order.dto'
 import { Order } from '../schemas/order.schema'
-import { uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 describe('OrdersMapper', () => {
   let ordersMapper: OrdersMapper
