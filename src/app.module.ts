@@ -10,6 +10,7 @@ import { CacheModule } from '@nestjs/cache-manager'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigModule } from '@nestjs/config'
 import { OrdersModule } from './orders/orders.module'
+import { AuthModule } from './auth/auth.module'
 
 /**
  * Módulo principal de la aplicación
@@ -52,6 +53,7 @@ import { OrdersModule } from './orders/orders.module'
     NotificationsModule,
     CacheModule.register(),
     OrdersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [FunkosNotificationsGateway, CategoriesNotificationsGateway],

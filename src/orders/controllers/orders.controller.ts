@@ -22,12 +22,15 @@ import { IdValidatePipe } from '../pipes/id-validate.pipe'
 import { UpdateOrderDto } from '../dto/update-order.dto'
 import { UserExistsGuard } from '../guards/user-exists.guard'
 import { CreateOrderDto } from '../dto/create-order.dto'
+import { Roles, RolesAuthGuard } from '../../auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
 
 /**
  * Controlador de pedidos
  */
 @Controller('orders')
 @UseInterceptors(CacheInterceptor)
+@UseGuards(JwtAuthGuard, RolesAuthGuard)
 export class OrdersController {
   private readonly logger = new Logger(OrdersController.name)
 
@@ -45,6 +48,7 @@ export class OrdersController {
    * @param order El orden de los pedidos
    */
   @Get()
+  @Roles('ADMIN')
   async findAll(
     @Query('page', new DefaultValuePipe(1)) page: number = 1,
     @Query('limit', new DefaultValuePipe(20)) limit: number = 20,
@@ -62,6 +66,7 @@ export class OrdersController {
    * @param id El id del pedido a buscar
    */
   @Get(':id')
+  @Roles('ADMIN')
   async findOne(@Param('id', IdValidatePipe) id: string) {
     this.logger.log(`Buscando pedido con id ${id}`)
     return await this.ordersService.findOne(id)
@@ -72,6 +77,7 @@ export class OrdersController {
    * @param userId El id del usuario
    */
   @Get('user/:userId')
+  @Roles('ADMIN')
   async findOrdersByUser(@Param('userId', ParseUUIDPipe) userId: string) {
     this.logger.log(`Buscando pedidos por user ${userId}`)
     return await this.ordersService.findByUserId(userId)
@@ -84,6 +90,7 @@ export class OrdersController {
   @Post()
   @HttpCode(201)
   @UseGuards(UserExistsGuard)
+  @Roles('ADMIN')
   async create(@Body() createOrderDto: CreateOrderDto) {
     this.logger.log(`Creando pedido ${JSON.stringify(createOrderDto)}`)
     return await this.ordersService.create(createOrderDto)
@@ -96,6 +103,7 @@ export class OrdersController {
    */
   @Put(':id')
   @UseGuards(UserExistsGuard)
+  @Roles('ADMIN')
   async update(
     @Param('id', IdValidatePipe) id: string,
     @Body() updateOrderDto: UpdateOrderDto,
@@ -112,6 +120,7 @@ export class OrdersController {
    */
   @Delete(':id')
   @HttpCode(204)
+  @Roles('ADMIN')
   async remove(@Param('id', IdValidatePipe) id: string) {
     this.logger.log(`Eliminando pedido con id ${id}`)
     await this.ordersService.remove(id)

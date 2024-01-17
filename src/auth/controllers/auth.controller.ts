@@ -1,7 +1,7 @@
 import { Body, Controller, Logger, Post } from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { UserSignUpDto } from './dto/user-sign.up.dto'
-import { UserSignInDto } from './dto/user-sign.in.dto'
+import { AuthService } from '../services/auth.service'
+import { UserSignUpDto } from '../dto/user-sign.up.dto'
+import { UserSignInDto } from '../dto/user-sign.in.dto'
 import {
   ApiBadRequestResponse,
   ApiBody,

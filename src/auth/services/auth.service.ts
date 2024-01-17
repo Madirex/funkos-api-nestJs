@@ -4,11 +4,11 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common'
-import { UserSignUpDto } from './dto/user-sign.up.dto'
-import { UserSignInDto } from './dto/user-sign.in.dto'
-import { UsersService } from '../users/users.service'
+import { UserSignUpDto } from '../dto/user-sign.up.dto'
+import { UserSignInDto } from '../dto/user-sign.in.dto'
+import { UsersService } from '../../users/users.service'
 import { JwtService } from '@nestjs/jwt'
-import { AuthMapper } from './mappers/users-mapper'
+import { AuthMapper } from '../mappers/users-mapper'
 
 /**
  * @description Servicio de autenticación
@@ -35,7 +35,6 @@ export class AuthService {
    */
   async singUp(userSignUpDto: UserSignUpDto) {
     this.logger.log(`singUp ${userSignUpDto.username}`)
-
     const user = await this.usersService.create(
       this.authMapper.toCreateDto(userSignUpDto),
     )

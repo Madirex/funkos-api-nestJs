@@ -16,6 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { CreateOrderDto } from '../orders/dto/create-order.dto'
 import { UpdateOrderDto } from '../orders/dto/update-order.dto'
 import { OrdersService } from '../orders/services/orders.service'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * @description Servicio de usuarios
@@ -84,10 +85,15 @@ export class UsersService {
 
     const userEntity = this.usersMapper.toEntity(createUserDto)
     userEntity.password = hashPassword
+    userEntity.id = uuidv4()
     const user = await this.usersRepository.save(userEntity)
 
     const roles = createUserDto.roles || [Role.USER]
-    const userRoles = roles.map((role) => ({ user: user, role: Role[role] }))
+    const userRoles = roles.map((role) => ({
+      user: user,
+      role: Role[role],
+      id: uuidv4(),
+    }))
     const savedUserRoles = await this.userRoleRepository.save(userRoles)
 
     return this.usersMapper.toResponseDtoWithRoles(user, savedUserRoles)

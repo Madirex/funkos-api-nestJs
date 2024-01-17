@@ -12,6 +12,7 @@ import {
   Put,
   Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { FunkosService } from '.././services/funkos.service'
@@ -24,6 +25,8 @@ import { Request } from 'express'
 import { Util } from '../../util/util'
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, PaginateQuery } from 'nestjs-paginate'
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
+import { Roles, RolesAuthGuard } from '../../auth/guards/roles-auth.guard'
 
 /**
  * Controlador de Funkos
@@ -75,6 +78,8 @@ export class FunkosController {
    */
   @Post()
   @HttpCode(201)
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   async create(@Body() createFunkoDto: CreateFunkoDto) {
     this.logger.log(
       `Creando Funko con datos: ${JSON.stringify(createFunkoDto)}`,
@@ -91,6 +96,8 @@ export class FunkosController {
    */
   @Put(':id')
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   async update(
     @Param('id') id: string,
     @Body() updateFunkoDto: UpdateFunkoDto,
@@ -109,6 +116,8 @@ export class FunkosController {
    */
   @Delete(':id')
   @HttpCode(204)
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   async remove(@Param('id') id: string) {
     this.logger.log(`Eliminando Funko con id: ${id}`)
     return await this.funkosService.remove(id)
@@ -121,6 +130,8 @@ export class FunkosController {
    * @param req Request
    */
   @Patch('/image/:id')
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles('ADMIN')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
