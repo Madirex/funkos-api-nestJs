@@ -11,6 +11,8 @@ import { CreateFunkoDto } from '../../../src/funkos/dto/create-funko.dto'
 import { UpdateFunkoDto } from '../../../src/funkos/dto/update-funko.dto'
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
+import { JwtAuthGuard } from '../../../src/auth/guards/jwt-auth.guard'
+import { RolesAuthGuard } from '../../../src/auth/guards/roles-auth.guard'
 
 describe('FunkosController (e2e)', () => {
   let app: INestApplication
@@ -64,7 +66,12 @@ describe('FunkosController (e2e)', () => {
         { provide: FunkosService, useValue: mockFunkosService },
         { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
-    }).compile()
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(RolesAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()

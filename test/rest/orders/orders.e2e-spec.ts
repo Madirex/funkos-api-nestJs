@@ -6,12 +6,17 @@ import { UpdateOrderDto } from '../../../src/orders/dto/update-order.dto'
 import { OrdersController } from '../../../src/orders/controllers/orders.controller'
 import { OrdersService } from '../../../src/orders/services/orders.service'
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
+import { v4 as uuidv4 } from 'uuid'
+import { JwtAuthGuard } from '../../../src/auth/guards/jwt-auth.guard'
+import { RolesAuthGuard } from '../../../src/auth/guards/roles-auth.guard'
 
 describe('OrdersController (e2e)', () => {
   let app: INestApplication
 
+  const id = uuidv4()
+
   const testOrder: CreateOrderDto = {
-    userId: 1,
+    userId: id,
     client: {
       fullName: 'Nombre Completo',
       email: 'correo@example.com',
@@ -35,7 +40,7 @@ describe('OrdersController (e2e)', () => {
   }
 
   const updateOrder: UpdateOrderDto = {
-    userId: 1,
+    userId: id,
     client: {
       fullName: 'Nombre Actualizado',
       email: 'nuevo_correo@example.com',
@@ -86,7 +91,12 @@ describe('OrdersController (e2e)', () => {
         { provide: OrdersService, useValue: mockOrdersService },
         { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
-    }).compile()
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(RolesAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()

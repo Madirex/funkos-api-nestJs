@@ -15,6 +15,8 @@ import { CreateCategoryDto } from '../../../src/categories/dto/create-category.d
 import { UpdateCategoryDto } from '../../../src/categories/dto/update-category.dto'
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
+import { RolesAuthGuard } from '../../../src/auth/guards/roles-auth.guard'
+import { JwtAuthGuard } from '../../../src/auth/guards/jwt-auth.guard'
 
 describe('CategoriesController (e2e)', () => {
   let app: INestApplication
@@ -81,7 +83,12 @@ describe('CategoriesController (e2e)', () => {
         { provide: CategoriesService, useValue: mockCategoriesService },
         { provide: CACHE_MANAGER, useValue: cacheManagerMock },
       ],
-    }).compile()
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(RolesAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()
