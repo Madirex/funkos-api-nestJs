@@ -109,5 +109,5 @@ VALUES ('543cc80d-00df-4dba-885e-cbccc5400acf',
 
 INSERT INTO user_roles (id, role, user_id)
 VALUES
-    ('8f3c7319-cd8a-4a7f-82ac-47d5a76819ea', 'USER', (SELECT id FROM users WHERE username = 'user')),
+    ('8f3c7319-cd8a-4a7f-82ac-47d5a76819ea', 'USER', (SELECT id FROM users WHERE username = 'admin')),
     ('7449ce79-6686-435f-b5e4-fc5d2c2d83d9', 'ADMIN', (SELECT id FROM users WHERE username = 'admin'));

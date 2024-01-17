@@ -137,7 +137,7 @@ export class OrderLine {
 })
 export class Order {
   @Prop({
-    type: Number,
+    type: String,
     required: true,
   })
   userId: string

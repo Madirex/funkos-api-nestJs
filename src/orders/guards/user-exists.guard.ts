@@ -33,18 +33,19 @@ export class UserExistsGuard implements CanActivate {
       throw new BadRequestException('El id del usuario es obligatorio')
     }
 
-    if (isNaN(userId)) {
+    console.log(userId)
+
+    if (!isNaN(userId)) {
       throw new BadRequestException('El id del usuario no es válido')
     }
 
-    /*return this.ordersService.userExists(userId).then((exists) => {
+    return this.ordersService.userExists(userId).then((exists) => {
       if (!exists) {
         throw new BadRequestException(
           'El Id no corresponde con ningún usuario en el sistema',
         )
       }
       return true
-    })*/ //TODO: DO
-    return true // TODO: eliminar esto al implementar lo comentado de arriba
+    })
   }
 }
