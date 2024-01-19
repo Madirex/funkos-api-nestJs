@@ -34,6 +34,30 @@ services:
     networks:
       - funko-network
 
+  # Servicio de la API REST
+  funko-api-rest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: funko-api-rest
+    restart: always
+    env_file: .env.prod
+    ports:
+      - ${API_PORT}:3000
+    volumes:
+      - storage-dir:/app/storage-dir
+      - ./cert:/app/cert
+    networks:
+      - funko-network
+    depends_on:
+      - postgres-db
+      - mongo-db
+
+# Storage
+volumes:
+  storage-dir:
+
+# Networks
 networks:
   funko-network:
     driver: bridge

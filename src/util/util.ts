@@ -73,8 +73,8 @@ export class Util {
       ? `/${process.env.API_VERSION}`
       : '/v1'
     const apiPort = process.env.API_PORT ? `${process.env.API_PORT}` : '3000'
-    const apiHost = process.env.API_HOST
-      ? `${process.env.API_HOST}`
+    const apiHost = process.env.POSTGRES_HOST
+      ? `${process.env.POSTGRES_HOST}`
       : 'localhost'
 
     const isHttps = process.env.API_HTTPS ? process.env.API_HTTPS : false
