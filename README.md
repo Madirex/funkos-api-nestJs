@@ -1,30 +1,99 @@
+# Funkos API Rest
+
+<p align="center">
+  <img src="images/logo.png" alt="Funko Sockets Server">
+</p>
+
+## 📝 Descripción
+
+API Rest de Funkos desarrollada en Typescript con Nest.Js.
+
+Colección de Postman incluida para probar las consultas.
+
+## ⚙ Herramientas
+
+- **@nestjs/cache-manager**
+- **@nestjs/common**
+- **@nestjs/config**
+- **@nestjs/core**
+- **@nestjs/jwt**
+- **@nestjs/mapped-types**
+- **@nestjs/mongoose**
+- **@nestjs/passport**
+- **@nestjs/platform-express**
+- **@nestjs/platform-socket.io**
+- **@nestjs/swagger**
+- **@nestjs/typeorm**
+- **@nestjs/websockets**
+- **@types/multer**
+- **bcryptjs**
+- **cache-manager**
+- **class-transformer**
+
+# Entidades
+
+## Categoría (`public.category`)
+
+**Descripción:** La entidad representa las categorías a las que pueden pertenecer los Funkos en el sistema.
+
+**Atributos:**
+
+- **id** (bigint): Identificador único generado automáticamente.
+- **active** (boolean): Indica si la categoría está activa.
+- **created_at** (timestamp): Fecha y hora de creación.
+- **type** (varchar): Tipo de la categoría.
+- **updated_at** (timestamp): Fecha y hora de la última actualización.
+
+## Funko (`public.funko`)
+
+**Descripción:** La entidad representa los Funkos disponibles en el sistema.
+
+**Atributos:**
+
+- **id** (uuid): Identificador único del Funko.
+- **created_at** (timestamp): Fecha y hora de creación.
+- **image** (varchar): URL de la imagen del Funko.
+- **name** (varchar): Nombre del Funko.
+- **price** (double precision): Precio del Funko (debe ser mayor o igual a 0).
+- **quantity** (integer): Cantidad disponible del Funko (debe ser mayor o igual a 0).
+- **updated_at** (timestamp): Fecha y hora de la última actualización.
+- **category_id** (bigint): Referencia a la categoría a la que pertenece.
+
+## Usuarios (`public.users`)
+
+**Descripción:** La entidad representa a los usuarios del sistema.
+
+**Atributos:**
+
+- **id** (uuid): Identificador único del usuario.
+- **created_at** (timestamp): Fecha y hora de creación.
+- **email** (varchar): Correo electrónico del usuario (único).
+- **is_deleted** (boolean): Indica si el usuario ha sido eliminado.
+- **name** (varchar): Nombre del usuario.
+- **password** (varchar): Contraseña del usuario.
+- **surname** (varchar): Apellido del usuario.
+- **updated_at** (timestamp): Fecha y hora de la última actualización.
+- **username** (varchar): Nombre de usuario único.
+
+## Roles de Usuario (`public.user_roles`)
+
+**Descripción:** La entidad asigna roles a los usuarios del sistema.
+
+**Atributos:**
+
+- **user_id** (uuid): Referencia al usuario al que se le asigna el rol.
+- **roles** (varchar): Rol del usuario (puede ser 'USER' o 'ADMIN').
+
+## Arrancar proyecto
+
+docker-compose up -d
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+
 [circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
@@ -57,17 +126,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
